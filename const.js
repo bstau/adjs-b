@@ -88,6 +88,19 @@ var CA_COMM_A_B_C_REPORT = 2;
 var CA_COMM_A_B_C_D_REPORT = 3;
 
 
+/* Downlink Request field, used in DF 4, 5, 20 and 21. 5 bits.
+ *
+ * Specifies that the aircraft has some data ready to send to the ground
+ * station, and should be interrogated with the specified protocol.
+ *
+ * Values 2 through 15 are not defined in FAA 6365.1A.
+ * Values 16 through 31 are reserved for the Comm-D protocol.
+ */
+var DR_NO_REQUEST = 0;
+var DR_SEND_COMM_B = 1;
+var DR_COMM_D_BASE = 16;
+
+
 /* Type Codes for extended squitter payloads.
  *
  * When receiving a DF_EXT_SQUITTER frame, a 5-bit number following the downlink
