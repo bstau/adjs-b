@@ -117,6 +117,24 @@ var FS_ALERT_SPI = 4;
 var FS_SPI = 5;
 
 
+/* Reply Information field.
+ *
+ * Values 0 through 7 are used for air-to-air interrogations, and are defined in
+ * the TCAS standards.
+ *
+ * Values 8 through 15 are used for acquisition replies, and indicate the
+ * aircraft's maximum airspeed.
+ */
+var RI_AIR_TO_AIR_BASE = 0;
+var RI_MAX_AIRSPEED_UNKNOWN = 8;
+var RI_MAX_AIRSPEED_LE_75KT = 9;
+var RI_MAX_AIRSPEED_LE_150KT = 10;
+var RI_MAX_AIRSPEED_LE_300KT = 11;
+var RI_MAX_AIRSPEED_LE_600KT = 12;
+var RI_MAX_AIRSPEED_LE_1200KT = 13;
+var RI_MAX_AIRSPEED_GT_1200KT = 14;
+
+
 /* Type Codes for extended squitter payloads.
  *
  * When receiving a DF_EXT_SQUITTER frame, a 5-bit number following the downlink
