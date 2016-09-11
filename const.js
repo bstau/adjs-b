@@ -78,6 +78,16 @@ var EXTENDED_DF_TYPES = [
 ];
 
 
+/* Transponder capability field, used in the DF_ALL_CALL_REPLY. 3 bits.
+ *
+ * Values 4 through 7 are not defined in FAA 6365.1A.
+ */
+var CA_NO_EXTENDED_REPORT = 0;
+var CA_COMM_A_B_REPORT = 1;
+var CA_COMM_A_B_C_REPORT = 2;
+var CA_COMM_A_B_C_D_REPORT = 3;
+
+
 /* Type Codes for extended squitter payloads.
  *
  * When receiving a DF_EXT_SQUITTER frame, a 5-bit number following the downlink
