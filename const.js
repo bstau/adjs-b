@@ -101,6 +101,22 @@ var DR_SEND_COMM_B = 1;
 var DR_COMM_D_BASE = 16;
 
 
+/* Flight Status field, used in DF 4, 5, 20, 21. 3 bits.
+ *
+ * This specifies a combination of 4 states (alert, SPI, airborne and on ground)
+ * that the vehicle may be in. Please note that this is not a bitmask; the on-
+ * ground and airborne state are not specified when the SPI flag is set.
+ *
+ * Values 6 and 7 are not specified by FAA 6365.1A.
+ */
+var FS_AIRBORNE = 0;
+var FS_ON_GROUND = 1;
+var FS_ALERT_AIRBORNE = 2;
+var FS_ALERT_ON_GROUND = 3;
+var FS_ALERT_SPI = 4;
+var FS_SPI = 5;
+
+
 /* Type Codes for extended squitter payloads.
  *
  * When receiving a DF_EXT_SQUITTER frame, a 5-bit number following the downlink
