@@ -148,6 +148,12 @@ var TC_TARGET_STATUS = 29;
 var TC_AIRCRAFT_OP_STATUS = 31;
 
 
+/* Vertical Status flag. Used in TCAS responses.
+ */
+var VS_AIRBORNE = 0;
+var VS_ON_GROUND = 1;
+
+
 /* Binary Data Store register numbers.
  *
  * Avionics hardware maintains state in a set of registers known as Binary Data
