@@ -18,3 +18,32 @@ var fromHexBuf = function(s) {
   }
   return a;
 };
+
+function assertEqual(test, expected, actual) {
+    /* Check for array equality. */
+    if (expected['length']) {
+        var arrayOK = assertEqual(test + ' array length',
+                                  expected.length, actual.length);
+        if (!arrayOK) return arrayOK;
+
+        var equality = expected.map(function(value, idx) {
+            return assertEqual(test + '[' + idx + ']', value, actual[idx]);
+        });
+
+        if (!equality.every(function(i) { return i; })) {
+            console.error('Checking ' + test + ', not all elements matched.');
+            return false;
+        }
+        return true;
+    }
+
+    if (expected !== actual) {
+        var hexSuffix = (typeof(actual) == typeof(1)) ?
+            (' (0x' + actual.toString(16) + ')') : '';
+
+        console.error('Checking ' + test + ', expected ' + expected + ', got ' +
+                      actual + hexSuffix);
+    }
+
+    return expected === actual;
+}
