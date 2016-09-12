@@ -81,11 +81,17 @@ var EXTENDED_DF_TYPES = [
 /* Transponder capability field, used in the DF_ALL_CALL_REPLY. 3 bits.
  *
  * Values 4 through 7 are not defined in FAA 6365.1A.
+ * Values 4 and above indicate the transponder is capable of at least 56 bit
+ * short message transfer across down- and uplinks.
  */
 var CA_NO_EXTENDED_REPORT = 0;
 var CA_COMM_A_B_REPORT = 1;
 var CA_COMM_A_B_C_REPORT = 2;
 var CA_COMM_A_B_C_D_REPORT = 3;
+var CA_MODE_S_LEVEL_2_ON_GROUND = 4;
+var CA_MODE_S_LEVEL_2_AIRBORNE = 5;
+var CA_MODE_S_LEVEL_2_UNKNOWN = 6;
+var CA_DOWNLINK_PENDING_ALERT_OR_SPI = 7;
 
 
 /* Downlink Request field, used in DF 4, 5, 20 and 21. 5 bits.
