@@ -21,7 +21,7 @@ var fromHexBuf = function(s) {
 
 function assertEqual(test, expected, actual) {
     /* Check for array equality. */
-    if (expected['length']) {
+    if (expected['keys']) {
         var arrayOK = assertEqual(test + ' array length',
                                   expected.length, actual.length);
         if (!arrayOK) return arrayOK;
