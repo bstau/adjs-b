@@ -66,6 +66,7 @@ var ModeSMessage = function(timestamp, data) {
     case DF_EXT_SQUITTER:
       this.aa = this.ap = (this.data[1] << 16) | (this.data[2] << 8) | this.data[3];
       this.tc = (this.data[4] & 0xF8) >> 3;
+      this.decodeExtSquitter();
       break;
 
     case DF_COMM_B_ALT:
@@ -120,12 +121,34 @@ var ModeSMessage = function(timestamp, data) {
  */
 ModeSMessage.prototype.DF = function() {
   return (this.data[0] >> 3) & 0x1F;
-}
+};
 
+/** Calculate the CRC for the message.
+ *
+ * @return {Number} 24-bit CRC.
+ */
 ModeSMessage.prototype.CRC = function(shouldEncode) {
   if (!shouldEncode && typeof(this.crc) == typeof(1)) {
     return this.crc;
   }
 
   return this.crc = ModeSCRC(this.data);
-}
+};
+
+/** Decode the fields within the extended squitter payload.
+ */
+ModeSMessage.prototype.decodeExtSquitter = function() {
+  if (this.df != DF_EXT_SQUITTER) return;
+
+  switch (this.tc) {
+    case TC_AIRCRAFT_IDENTIFICATION_1:
+    case TC_AIRCRAFT_IDENTIFICATION_2:
+    case TC_AIRCRAFT_IDENTIFICATION_3:
+    case TC_AIRCRAFT_IDENTIFICATION_4:
+      this.callsign = decodeCallsign(this.data.slice(5,11));
+      break;
+
+    default:
+      break;
+  }
+};
