@@ -148,6 +148,23 @@ ModeSMessage.prototype.decodeExtSquitter = function() {
       this.callsign = decodeCallsign(this.data.slice(5,11));
       break;
 
+    case TC_AIRBORNE_VELOCITY:
+      this.st = this.data[4] & 0x07;
+      this.ic = (this.data[5] & 0x80) ? 1 : 0;
+      this.resv_a = (this.data[5] & 0x40) ? 1 : 0;
+      this.nac = (this.data[5] & 0x38) >> 3;
+      this.we_sign = (this.data[5] & 0x04) ? 1 : 0;
+      this.we = (this.data[5] & 0x03) << 8 | this.data[6];
+      this.ns_sign = (this.data[7] & 0x80) ? 1 : 0;
+      this.ns = (this.data[7] & 0x7F) << 3 | (this.data[8] & 0xe0) >> 5;
+      this.vrsrc = (this.data[8] & 0x10) ? 1 : 0;
+      this.vr_sign = (this.data[8] & 0x08) ? 1 : 0;
+      this.vr = (this.data[8] & 0x07) << 6 | (this.data[9] & 0xFC) >> 2;
+      this.resv_b = this.data[9] & 0x03;
+      this.baro_diff_sign = (this.data[10] & 0x80) ? 1 : 0;
+      this.baro_diff = this.data[10] & 0x7F;
+      break;
+
     default:
       break;
   }
