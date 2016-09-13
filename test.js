@@ -37,11 +37,14 @@ function assertEqual(test, expected, actual) {
         return true;
     }
 
+    var hexSuffix = (typeof(actual) == typeof(1)) ?
+        (' (0x' + actual.toString(16) + ')') : '';
     if (expected !== actual) {
-        var hexSuffix = (typeof(actual) == typeof(1)) ?
-            (' (0x' + actual.toString(16) + ')') : '';
 
         console.error('Checking ' + test + ', expected ' + expected + ', got ' +
+                      actual + hexSuffix);
+    } else {
+        console.debug('OK: ' + test + ', expected ' + expected + ', got ' +
                       actual + hexSuffix);
     }
 
