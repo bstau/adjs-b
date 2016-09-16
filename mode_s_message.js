@@ -165,6 +165,29 @@ ModeSMessage.prototype.decodeExtSquitter = function() {
       this.baro_diff = this.data[10] & 0x7F;
       break;
 
+    case TC_AIRBORNE_POSITION_9:
+    case TC_AIRBORNE_POSITION_10:
+    case TC_AIRBORNE_POSITION_11:
+    case TC_AIRBORNE_POSITION_12:
+    case TC_AIRBORNE_POSITION_13:
+    case TC_AIRBORNE_POSITION_14:
+    case TC_AIRBORNE_POSITION_15:
+    case TC_AIRBORNE_POSITION_16:
+    case TC_AIRBORNE_POSITION_17:
+    case TC_AIRBORNE_POSITION_18:
+      this.ss = this.data[4] & 0x06 >> 1;
+      this.nicsb = this.data[4] & 0x01;
+      this.alt = this.data[5] << 4 | (this.data[6] & 0xf0) >> 4;
+      this.time = (this.data[6] & 0x08) ? 1 : 0;
+      this.cpr_odd = (this.data[6] & 0x04) ? 1 : 0;
+      this.lat_cpr = (this.data[6] & 0x03) << 15 |
+                     (this.data[7] << 7) |
+                     (this.data[8] & 0xFE) >> 1;
+      this.lon_cpr = (this.data[8] & 0x01) << 16 |
+                     this.data[9] << 8 |
+                     this.data[10];
+      break;
+
     default:
       break;
   }
