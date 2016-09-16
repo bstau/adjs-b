@@ -257,4 +257,11 @@ var BDS_MODE_S_BITE_2 = 0xE2;
 var BDS_MILITARY_1 = 0xF1;
 var BDS_MILITARY_2 = 0xF2;
 
+/** Bit set in the AC field to specify metric measurements. */
+var AC_METRIC_FLAG = 0x0040;
 
+/** The low-altitude flag in the AC field, also known as the Q bit, specifies
+ * that the field is a simple integer representing 25ft intervals from 1000ft
+ * below sea level.
+ */
+var AC_LOW_ALTITUDE_FLAG = 0x0010;
