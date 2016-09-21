@@ -55,5 +55,8 @@ function EncodeCPR(lat, lng, is_odd, bits) {
     var yz = Math.floor(0.5 + Math.pow(2, bits) *
                         (lat % zone_lat_height) / zone_lat_height);
 
+    xz %= Math.pow(2, bits);
+    yz %= Math.pow(2, bits);
+
     return {lng: xz, lat: yz};
 }
