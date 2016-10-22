@@ -102,6 +102,20 @@ var VALID_MESSAGES = [
      properties: {df: DF_ALL_CALL_REPLY, aa: 0xAC7EE7, ap: 0xAC7EE7,
                   ca: CA_DOWNLINK_PENDING_ALERT_OR_SPI, crc: 0}},
 
+    // DF_TCAS_LONG
+    {msg: '80A18598582D849566DD48595A4C',
+     properties: {df: DF_TCAS_LONG, aa: 0xAB9448, ap: 0xAB9448,
+                  vs: VS_AIRBORNE, ri: 3, ac: 0x0598,
+                  mv: [0x58, 0x2d, 0x84, 0x95, 0x66, 0xdd, 0x48]}},
+    {msg: '80A184BA6027A0FEE62804FB7FB5',
+     properties: {df: DF_TCAS_LONG, aa: 0xAA6E81, ap: 0xAA6E81,
+                  vs: VS_AIRBORNE, ri: 3, ac: 0x4ba,
+                  mv: [0x60, 0x27, 0xa0, 0xfe, 0xe6, 0x28, 0x04]}},
+    {msg: '842F64E5E3E755B7719F55BAAFB6',
+     properties: {df: DF_TCAS_LONG, aa: 0xA1AFC8, ap: 0xA1AFC8,
+                  vs: VS_ON_GROUND, ri: RI_MAX_AIRSPEED_GT_1200KT, ac: 0x4e5,
+                  mv: [0xe3, 0xe7, 0x55, 0xb7, 0x71, 0x9f, 0x55]}},
+
     // DF_EXT_SQUITTER
     {msg: '8D71BE09F8010000003928B7FB5B',
      properties: {df: DF_EXT_SQUITTER, aa: 0x71BE09, ap: 0x71BE09, 

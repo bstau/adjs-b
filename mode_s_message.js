@@ -49,6 +49,7 @@ var ModeSMessage = function(timestamp, data) {
     case DF_TCAS_SHORT:
       this.ap = this.aa = this.CRC();
       this.vs = (this.data[0] & 0x04) >> 2;
+      this.cc = (this.data[0] & 0x02) >> 1; /* Cross-link capability */
       this.x0 = ((this.data[0] & 0x03) << 5) | (this.data[1] & 0xF8) >> 3;
       this.ri = (this.data[1] & 0x07) << 1 | (this.data[2] & 0x80) >> 7;
       this.x1 = (this.data[2] & 0x60) >> 5;
@@ -61,6 +62,39 @@ var ModeSMessage = function(timestamp, data) {
       this.dr = (this.data[1] >> 3) & 0x1F;
       this.um = ((this.data[1] & 0x07) << 3) | ((this.data[2] & 0xe0) >> 5);
       this.ac = (this.data[2] & 0x1f) << 8 | this.data[3];
+      break;
+
+    case DF_TCAS_LONG:
+      this.aa = this.ap = this.CRC();
+      this.vs = (this.data[0] & 0x04) >> 2;
+      this.x0 = ((this.data[0] & 0x03) << 5) | (this.data[1] & 0xF8) >> 3;
+      this.ri = (this.data[1] & 0x07) << 1 | (this.data[2] & 0x80) >> 7;
+      this.x1 = (this.data[2] & 0x60) >> 5;
+      this.ac = (this.data[2] & 0x1F) << 8 | this.data[3];
+      this.mv = this.data.slice(4, 11);
+      // mv contains bds
+      if (this.data[4] == 0x30) {
+        this.bds = this.data[4];
+        this.ara = this.data[5] << 6 | (this.data[6] & 0xFC) >> 2;
+        /* RAs Active */
+        this.rac = (this.data[6] & 0x03) << 2 | (this.data[7] & 0xC0) >> 6;
+        /* RA Terminated */
+        this.rat = (this.data[7] & 0x20) ? 1 : 0;
+        /* Multiple threat indicator */
+        this.mti = (this.data[7] & 0x10) ? 1 : 0;
+        /* Threat Type Indicator */
+        this.tti = (this.data[7] & 0x0C) >> 2;
+        /* Threat Identity */
+        this.tid = (this.data[7] & 0x03) << 24 | (this.data[8] << 16) | (this.data[9] << 8) | this.data[10];
+
+        switch (this.tti) {
+          case TTI_ALT_RANGE_BEARING:
+            this.threat_altitude_code = this.tid >> 13;
+            this.threat_range = (this.tid & 0x1FC0) >> 6;
+            this.threat_bearing = (this.tid & 0x3F);
+            break;
+        }
+      }
       break;
 
     case DF_EXT_SQUITTER:
@@ -112,6 +146,14 @@ var ModeSMessage = function(timestamp, data) {
       this.nd = this.data[0] & 0x0f;
       this.md = this.data.slice(1, 11);
       break;
+
+    case DF_MIL_SQUITTER:
+      this.af = (this.data[0] & 0x07);
+      if (this.af === AF_UNENCRYPTED_SQUITTER) {
+        this.aa = this.ap = (this.data[1] << 16) | (this.data[2] << 8) | this.data[3];
+        this.me = this.data.slice(4, 11);
+        this.pi = this.data.slice(11, 14);
+      }
   }
 };
 
