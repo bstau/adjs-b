@@ -218,6 +218,8 @@ var VALID_MESSAGES = [
                   aa: 0xAA40B4, ap: 0xAA40B4}},
 
     // DF_COMM_D_ELM
+    {msg: '9F841E4C38108F96DBE4E22CECB4',
+     properties: {df: DF_MIL_SQUITTER, af: 7}},
     {msg: 'C83E05D8DFE5F1DF0DCC3F034110',
      properties: {df: DF_COMM_D_ELM + 1, ap: 0, aa: 0, x0: 0, ke: 0, nd: 8,
                   md: [0x3e, 0x05, 0xd8, 0xdf, 0xe5, 0xf1, 0xdf, 0x0d, 0xcc,
