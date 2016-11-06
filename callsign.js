@@ -79,6 +79,29 @@ function USICAOToTailNumber(icao) {
 	return tail_number;
 }
 
+function CAICAOToTailNumber(icao) {
+    // Canadian tail numbers are encoded as a fairly basic base-26 format,
+    // consisting of a three-(26^3) ranges corresponding to CF-AAA..CI-ZZZ.
+
+    var CA_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var CA_PREFIX = 'FGI';
+    var CA_TABLE_LEN = CA_TABLE.length;
+    var CA_MIN_ICAO = 0xC00001;
+    var CA_MAX_ICAO = 0xC0CDF8;
+
+    var CA_PREFIX_BLOCK = CA_TABLE_LEN * CA_TABLE_LEN * CA_TABLE_LEN;
+
+    if (icao < CA_MIN_ICAO) return null;
+    if (icao > CA_MAX_ICAO) return null;
+
+    icao -= CA_MIN_ICAO;
+    var tail_number = 'C' + CA_PREFIX[Math.floor(icao / CA_PREFIX_BLOCK)] + '-';
+    tail_number += CA_TABLE[Math.floor(icao / Math.pow(CA_TABLE_LEN, 2)) % CA_TABLE_LEN];
+    tail_number += CA_TABLE[Math.floor(icao / CA_TABLE_LEN) % CA_TABLE_LEN];
+    tail_number += CA_TABLE[icao % CA_TABLE_LEN];
+    return tail_number;
+}
+
 function AUICAOToTailNumber(icao) {
     // Australian tail numbers are encoded as a fairly basic base-36 format,
     // consisting only of the three-letter suffix to the country prefix (VH).
@@ -278,7 +301,7 @@ var ICAO_PREFIXES = [
   {prefix: '1001', location_name: 'NAM/PAC', country_code: null},
   {prefix: '1010', location_name: 'United States', country_code: 'US', tail_algorithm: USICAOToTailNumber},
   {prefix: '1011', location_name: 'RESERVED', country_code: null},
-  {prefix: '110000', location_name: 'Canada', country_code: 'CA'},
+  {prefix: '110000', location_name: 'Canada', country_code: 'CA', tail_algorithm: CAICAOToTailNumber},
   {prefix: '110010000', location_name: 'New Zealand', country_code: 'NZ'},
   {prefix: '110010001000', location_name: 'Fiji', country_code: 'FJ'},
   {prefix: '11001000101000', location_name: 'Nauru', country_code: 'NR'},

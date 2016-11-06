@@ -19,6 +19,14 @@ var EXPECTED_TAIL_NUMBERS = [
     {icao: 0xA471AC, country: 'US', tail_number: 'N386AZ'},
     {icao: 0x7C39B3, country: 'AU', tail_number: 'VH-LOL'},
     {icao: 0x7C4771, country: 'AU', tail_number: 'VH-OEB'},
+    {icao: 0xC00001, country: 'CA', tail_number: 'CF-AAA'},
+    {icao: 0xC002A5, country: 'CA', tail_number: 'CF-BAA'},
+    {icao: 0xC00AFC, country: 'CA', tail_number: 'CF-EED'},
+    {icao: 0xC044A8, country: 'CA', tail_number: 'CF-ZZZ'},
+    {icao: 0xC044A9, country: 'CA', tail_number: 'CG-AAA'},
+    {icao: 0xC08950, country: 'CA', tail_number: 'CG-ZZZ'},
+    {icao: 0xC08951, country: 'CA', tail_number: 'CI-AAA'},
+    {icao: 0xC0CDF8, country: 'CA', tail_number: 'CI-ZZZ'},
 ];
 
 testThat('Determines correct country code from ICAO addresses', EXPECTED_TAIL_NUMBERS.every(
