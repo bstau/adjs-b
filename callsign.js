@@ -79,6 +79,28 @@ function USICAOToTailNumber(icao) {
 	return tail_number;
 }
 
+function FRICAOToTailNumber(icao) {
+    // French tail numbers use a sensible bitmasking strategy for 24-bit
+    // encoding; the bitfields are:
+    //                 1       2
+    // 0...,...8...,...6...,...4
+    // [ fr ][ 2][ 3 ][ 4 ][ 5 ]
+
+    var FR_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ??????';
+    var FR_PREFIX = 'B?GHO???????????';
+    var FR_MIN_ICAO = 0x380000;
+    var FR_MAX_ICAO = 0x3A6739;
+
+    if (icao < FR_MIN_ICAO) return null;
+    if (icao > FR_MAX_ICAO) return null;
+
+    var tail_number = 'F-' + FR_PREFIX[(icao >> 15) & 0xF] +
+        FR_TABLE[(icao >> 10) & 0x1F] +
+        FR_TABLE[(icao >> 5) & 0x1F] +
+        FR_TABLE[icao & 0x1F];
+    return tail_number;
+}
+
 function CAICAOToTailNumber(icao) {
     // Canadian tail numbers are encoded as a fairly basic base-26 format,
     // consisting of a three-(26^3) ranges corresponding to CF-AAA..CI-ZZZ.
@@ -120,6 +142,9 @@ function AUICAOToTailNumber(icao) {
         AU_TABLE[Math.floor(icao / AU_TABLE_LEN) % AU_TABLE_LEN] +
         AU_TABLE[icao % AU_TABLE_LEN];
 }
+
+// Possibilities: DE, BE, DK, FI, CH, PT, GR, TR, RO, YU, RU, ZA
+// Done: AU, CA, US, FR
 
 var ICAO_PREFIXES = [
   {prefix: '000000000000000000000000', location_name: 'INVALID', country_code: null},
@@ -205,7 +230,7 @@ var ICAO_PREFIXES = [
   {prefix: '00101', location_name: 'SAM', country_code: null},
   {prefix: '001100', location_name: 'Italy', country_code: 'IT'},
   {prefix: '001101', location_name: 'Spain', country_code: 'ES'},
-  {prefix: '001110', location_name: 'France', country_code: 'FR'},
+  {prefix: '001110', location_name: 'France', country_code: 'FR', tail_algorithm: FRICAOToTailNumber},
   {prefix: '001111', location_name: 'Germany', country_code: 'DE'},
   {prefix: '010000', location_name: 'United Kingdom', country_code: 'GB'},
   {prefix: '010001000', location_name: 'Austria', country_code: 'AT'},

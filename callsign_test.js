@@ -27,6 +27,27 @@ var EXPECTED_TAIL_NUMBERS = [
     {icao: 0xC08950, country: 'CA', tail_number: 'CG-ZZZ'},
     {icao: 0xC08951, country: 'CA', tail_number: 'CI-AAA'},
     {icao: 0xC0CDF8, country: 'CA', tail_number: 'CI-ZZZ'},
+
+    {icao: 0x380000, country: 'FR', tail_number: 'F-BAAA'},
+    {icao: 0x380020, country: 'FR', tail_number: 'F-BABA'},
+    {icao: 0x380400, country: 'FR', tail_number: 'F-BBAA'},
+    {icao: 0x386400, country: 'FR', tail_number: 'F-BZAA'},
+    {icao: 0x380332, country: 'FR', tail_number: 'F-BAZS'},
+    {icao: 0x381E4C, country: 'FR', tail_number: 'F-BHSM'},
+
+    {icao: 0x390000, country: 'FR', tail_number: 'F-GAAA'},
+    {icao: 0x390083, country: 'FR', tail_number: 'F-GAED'},
+    {icao: 0x398000, country: 'FR', tail_number: 'F-HAAA'},
+    {icao: 0x398001, country: 'FR', tail_number: 'F-HAAB'},
+    {icao: 0x39E739, country: 'FR', tail_number: 'F-HZZZ'},
+    {icao: 0x3A0000, country: 'FR', tail_number: 'F-OAAA'},
+    {icao: 0x3A2208, country: 'FR', tail_number: 'F-OIQI'},
+    {icao: 0x3A6739, country: 'FR', tail_number: 'F-OZZZ'},
+
+    // The UK does not have predictable tail number to ICAO mappings.
+    {icao: 0x404000, country: 'GB'},
+    {icao: 0x404001, country: 'GB'},
+
 ];
 
 testThat('Determines correct country code from ICAO addresses', EXPECTED_TAIL_NUMBERS.every(
@@ -37,6 +58,8 @@ testThat('Determines correct country code from ICAO addresses', EXPECTED_TAIL_NU
 
 testThat('Resolves ICAO address to national tail number', EXPECTED_TAIL_NUMBERS.every(
 	function(input) {
+        if (!input.tail_number) return true;
+
 		return assertEqual('ICAOToTailNumber(0x' + input.icao.toString(16) + ')',
 			input.tail_number, ICAOToTailNumber(input.icao));
 	}));
