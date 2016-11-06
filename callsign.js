@@ -335,7 +335,8 @@ for (var i = 0; i < ICAO_PREFIXES.length; ++i) {
   ICAO_PREFIXES[i].address = Number.parseInt(ICAO_PREFIXES[i].prefix, 2) << shift_by;
 }
 
-// Sort prefixes by the prefix length.
+// Sort prefixes by descending prefix length, such that the first match for the
+// prefix and mask will be the most specific for any given ICAO address.
 ICAO_PREFIXES.sort(function(a, b) {
     return a.prefix.length < b.prefix.length;
 });
