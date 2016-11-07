@@ -84,10 +84,10 @@ function FRICAOToTailNumber(icao) {
     // encoding; the bitfields are:
     //                 1       2
     // 0...,...8...,...6...,...4
-    // [ fr ][ 2][ 3 ][ 4 ][ 5 ]
+    // [ fr ][2][ 3 ][ 4 ][ 5 ]
 
     var FR_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ??????';
-    var FR_PREFIX = 'B?GHO???????????';
+    var FR_PREFIX = 'B?GHO???';
     var FR_MIN_ICAO = 0x380000;
     var FR_MAX_ICAO = 0x3A6739;
 
@@ -141,6 +141,87 @@ function AUICAOToTailNumber(icao) {
         AU_TABLE[Math.floor(icao / Math.pow(AU_TABLE_LEN, 2))] +
         AU_TABLE[Math.floor(icao / AU_TABLE_LEN) % AU_TABLE_LEN] +
         AU_TABLE[icao % AU_TABLE_LEN];
+}
+
+function DEICAOToTailNumber(icao) {
+    // German ICAO addresses are totally whacked.
+
+    var DE_FIRST = '?AB';
+    var DE_SECOND = '?ABCDEFGHIJKLMNO';
+    var DE_TABLE = '?ABCDEFGHIJKLMNOPQRSTUVWXYZ         ';
+    var DE_UPPER = 'CEFGHIKLMNOPQRSTUVWXYZ';
+
+    var segment = ((icao & 0x03FFFF) >> 13);
+    var prefix = 'D-??';
+
+    switch (segment) {
+    case 0x0:
+        return 'D-A' +
+            DE_TABLE[16 + Math.floor((icao - 0x3C0001) / (26 * 26)) % 26] +
+            DE_TABLE[1 + Math.floor((icao - 0x3C0001) / 26) % 26] +
+            DE_TABLE[1 + (icao - 0x3C0001) % 26];
+
+    case 0x1:
+        return 'D-B' +
+            DE_TABLE[16 + Math.floor((icao - 0x3C2001) / (26 * 26)) % 26] +
+            DE_TABLE[1 + Math.floor((icao - 0x3C2001) / 26) % 26] +
+            DE_TABLE[1 + (icao - 0x3C2001) % 26];
+
+    case 0x2:
+    case 0x3:
+        return 'D-A' + DE_SECOND[(icao >> 10) & 0xF] +
+            DE_TABLE[(icao >> 5) & 0x1F] + DE_TABLE[(icao & 0x1F)];
+
+    case 0x4:
+    case 0x5:
+        return 'D-B' + DE_TABLE[(icao >> 10) & 0x1F] +
+            DE_TABLE[(icao >> 5) & 0x1F] + DE_TABLE[(icao & 0x1F)];
+
+    case 0x6:
+    case 0x7:
+    case 0x8:
+    case 0x9:
+    case 0xA:
+    case 0xB:
+    case 0xC:
+    case 0xD:
+    case 0xE:
+    case 0xF:
+    case 0x10:
+    case 0x11:
+    case 0x12:
+    case 0x13:
+        return 'D-' +
+            DE_UPPER[Math.floor((icao - 0x3CC000) / Math.pow(26, 3))] +
+            DE_TABLE[1 + Math.floor((icao - 0x3CC000) / (26 * 26)) % 26] +
+            DE_TABLE[1 + Math.floor((icao - 0x3CC000) / 26) % 26] +
+            DE_TABLE[1 + (icao - 0x3CC000) % 26];
+
+    case 0x16:
+    case 0x17:
+        if (icao <= 0x3EE097) {
+            return 'D-' + 
+                DE_UPPER[Math.floor((icao - 0x3D0000) / Math.pow(26, 3))] +
+                DE_TABLE[1 + Math.floor((icao - 0x3D0000) / (26 * 26)) % 26] +
+                DE_TABLE[1 + Math.floor((icao - 0x3D0000) / 26) % 26] +
+                DE_TABLE[1 + (icao - 0x3D0000) % 26];
+        } else {
+            // The space above 3EE097 is used for numeric tail numbers.
+            return null;
+        }
+
+
+    case 0x1f:
+        // At this point, we're no longer tightly packing tail numbers like
+        // we were above. Ugh.
+        return 'D-' + 
+            DE_UPPER[Math.floor((icao - 0x3DC5DA) / Math.pow(26, 3))] +
+            DE_TABLE[1 + Math.floor((icao - 0x3DC5DA) / (26 * 26)) % 26] +
+            DE_TABLE[1 + Math.floor((icao - 0x3DC5DA) / 26) % 26] +
+            DE_TABLE[1 + (icao - 0x3DC5DA) % 26];
+    default:
+        return null;
+    }
 }
 
 // Possibilities: DE, BE, DK, FI, CH, PT, GR, TR, RO, YU, RU, ZA
@@ -231,7 +312,7 @@ var ICAO_PREFIXES = [
   {prefix: '001100', location_name: 'Italy', country_code: 'IT'},
   {prefix: '001101', location_name: 'Spain', country_code: 'ES'},
   {prefix: '001110', location_name: 'France', country_code: 'FR', tail_algorithm: FRICAOToTailNumber},
-  {prefix: '001111', location_name: 'Germany', country_code: 'DE'},
+  {prefix: '001111', location_name: 'Germany', country_code: 'DE', tail_algorithm: DEICAOToTailNumber},
   {prefix: '010000', location_name: 'United Kingdom', country_code: 'GB'},
   {prefix: '010001000', location_name: 'Austria', country_code: 'AT'},
   {prefix: '010001001', location_name: 'Belgium', country_code: 'BE'},
