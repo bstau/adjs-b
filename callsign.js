@@ -227,7 +227,7 @@ function DEICAOToTailNumber(icao) {
 // Possibilities: DE, BE, DK, FI, CH, PT, GR, TR, RO, YU, RU, ZA
 // Done: AU, CA, US, FR
 
-var ICAO_PREFIXES = [
+var ICAO_PREFIXES = ([
   {prefix: '000000000000000000000000', location_name: 'INVALID', country_code: null},
   {prefix: '00000000010000', location_name: 'Zimbabwe', country_code: 'ZW'},
   {prefix: '000000000110', location_name: 'Mozambique', country_code: 'MZ'},
@@ -429,21 +429,17 @@ var ICAO_PREFIXES = [
   {prefix: '11110000100100', location_name: 'ICAO', country_code: null},
   {prefix: '1111', location_name: 'RESERVED', country_code: null},
   {prefix: '111111111111111111111111', location_name: 'BROADCAST', country_code: null},
-];
+]).map(function(entry) {
+    var prefix_length = entry.prefix.length;
+    var shift_by = (24 - prefix_length);
+    var mask_value = ((1 << prefix_length) - 1) << shift_by;
 
-// Initialise the prefixes with a cheap mask and value.
-for (var i = 0; i < ICAO_PREFIXES.length; ++i) {
-  var prefix_length = ICAO_PREFIXES[i].prefix.length;
-  var shift_by = (24 - prefix_length);
-  var mask_value = ((1 << prefix_length) - 1) << shift_by;
-  
-  ICAO_PREFIXES[i].mask = mask_value; 
-  ICAO_PREFIXES[i].address = Number.parseInt(ICAO_PREFIXES[i].prefix, 2) << shift_by;
-}
-
-// Sort prefixes by descending prefix length, such that the first match for the
-// prefix and mask will be the most specific for any given ICAO address.
-ICAO_PREFIXES.sort(function(a, b) {
+    entry.mask = mask_value; 
+    entry.address = Number.parseInt(entry.prefix, 2) << shift_by;
+    return entry;
+}).sort(function(a, b) {
+    // Sort prefixes by descending prefix length, such that the first match for the
+    // prefix and mask will be the most specific for any given ICAO address.
     return a.prefix.length < b.prefix.length;
 });
 
