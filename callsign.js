@@ -61,7 +61,7 @@ function USICAOToTailNumber(icao) {
 
     // If we have a digit in the fifth position, bail out without trying to find
     // any tail letters.
-    if (!trailing_letters && icao > (US_TABLE_ALPHA.length + 1)) {
+    if (!trailing_letters && icao > US_TABLE_ALPHA.length) {
         tail_number += US_TABLE_DIG2[icao - (US_TABLE_ALPHA.length + 1)];
         return tail_number;
     }
@@ -399,7 +399,7 @@ var ICAO_PREFIXES = [
   {prefix: '100010010110', location_name: 'United Arab Emirates', country_code: 'AE'},
   {prefix: '10001001011100', location_name: 'Solomon Islands', country_code: 'SB'},
   {prefix: '100010011000', location_name: 'Papua New Guinea', country_code: 'PG'},
-  {prefix: '10001001100100', location_name: 'ICAO', country_code: null},
+  {prefix: '10001001100100', location_name: 'Taiwan', country_code: 'TW'},
   {prefix: '100010100', location_name: 'Indonesia', country_code: 'ID'},
   {prefix: '10010000000000', location_name: 'Marshall Islands', country_code: 'MH'},
   {prefix: '10010000000100', location_name: 'Cook Islands', country_code: 'CK'},

@@ -1,6 +1,8 @@
 var EXPECTED_TAIL_NUMBERS = [
     {icao: 0xA37646, country: 'US', tail_number: 'N322FL'},
     {icao: 0xA471AC, country: 'US', tail_number: 'N386AZ'},
+    {icao: 0xA00725, country: 'US', tail_number: 'N10000'},
+    {icao: 0xA41743, country: 'US', tail_number: 'N36280'},
     {icao: 0xA00001, country: 'US', tail_number: 'N1'},
     {icao: 0xA00002, country: 'US', tail_number: 'N1A'},
     {icao: 0xA00003, country: 'US', tail_number: 'N1AA'},
@@ -137,6 +139,7 @@ var EXPECTED_TAIL_NUMBERS = [
     // A few common planes spotted in the skies over SFO.
     {icao: 0x71BF32, country: 'KR'},
     {icao: 0x7800EB, country: 'CN'},
+    {icao: 0x89901A, country: 'TW'},
     {icao: 0x484006, country: 'NL'},
     {icao: 0x47C5C9, country: 'NO'},
     {icao: 0x4B18FF, country: 'CH'},
