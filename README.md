@@ -26,3 +26,4 @@ These projects implement decoders for Mode S and ADS-B payloads:
 - [FAA 6360.15A - Mode S Project Implementation Plan](https://www.faa.gov/documentLibrary/media/Order/6360.15A.pdf)
 - [ADS-B Decodingn Guide](http://adsb-decode-guide.readthedocs.io/en/latest/index.html)
 - [ICAO Doc 9871 - Mode S Services and Extended Squitter](https://store.icao.int/publications/technical-provisions-for-mode-s-services-and-extended-squitter-doc-9871-english-printed.html)
+- [AIS Character Set](http://www.catb.org/gpsd/AIVDM.html#_ais_payload_data_types)
