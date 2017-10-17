@@ -13,13 +13,13 @@ function USICAOToTailNumber(icao) {
     var US_TABLE_DIG2 = '0123456789';
     var US_TABLE_ALPHA = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 
-	// Each first digit has this much key space.
+    // Each first digit has this much key space.
     var DIGIT_1 = 101711;
-	var DIGIT_2 = 10111;
-	var DIGIT_3 = 951;
+    var DIGIT_2 = 10111;
+    var DIGIT_3 = 951;
     var DIGIT_4 = US_TABLE_ALPHA.length + US_TABLE_DIG2.length + 1;
 
-	// Remainders of less than this specify a letter suffix.
+    // Remainders of less than this specify a letter suffix.
     var LAST_DIGIT = 601;
 
     US_MAX_ICAO = US_MIN_ICAO + US_TABLE_DIG1.length * DIGIT_1 - 1;
@@ -29,35 +29,35 @@ function USICAOToTailNumber(icao) {
 
 
     var tail_number = 'N';
-	var trailing_letters = true;
+    var trailing_letters = true;
 
-	// Extract the first letter.
-	icao -= US_MIN_ICAO;
-	tail_number += US_TABLE_DIG1[Math.floor(icao / DIGIT_1)];
-	icao %= DIGIT_1;
+    // Extract the first letter.
+    icao -= US_MIN_ICAO;
+    tail_number += US_TABLE_DIG1[Math.floor(icao / DIGIT_1)];
+    icao %= DIGIT_1;
 
-	// Extract the second digit.
-	if (icao >= LAST_DIGIT) {
-		tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_2)];
-		icao -= LAST_DIGIT;
-		icao %= DIGIT_2;
-	}
+    // Extract the second digit.
+    if (icao >= LAST_DIGIT) {
+        tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_2)];
+        icao -= LAST_DIGIT;
+        icao %= DIGIT_2;
+    }
 
-	// Extract the third digit.
-	if (icao >= LAST_DIGIT) {
-		tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_3)];
-		icao -= LAST_DIGIT;
-		icao %= DIGIT_3;
-	}
+    // Extract the third digit.
+    if (icao >= LAST_DIGIT) {
+        tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_3)];
+        icao -= LAST_DIGIT;
+        icao %= DIGIT_3;
+    }
 
-	// Extract the fourth digit. If present, the fifth digit may include either
+    // Extract the fourth digit. If present, the fifth digit may include either
     // a letter or a number. The coding scheme needs this information later on.
-	if (icao >= LAST_DIGIT) {
-		trailing_letters = false;
+    if (icao >= LAST_DIGIT) {
+        trailing_letters = false;
         tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_4)];
         icao -= LAST_DIGIT;
         icao %= DIGIT_4;
-	}
+    }
 
     // If we have a digit in the fifth position, bail out without trying to find
     // any tail letters.
@@ -76,7 +76,7 @@ function USICAOToTailNumber(icao) {
         tail_number += US_TABLE_ALPHA[icao - 1];
     }
 
-	return tail_number;
+    return tail_number;
 }
 
 function FRICAOToTailNumber(icao) {
@@ -460,8 +460,8 @@ function ICAOToCountry(icao) {
 }
 
 function ICAOToTailNumber(icao) {
-	var result = ICAOLookup(icao);
-	if (!result || !result.tail_algorithm) return null;
+    var result = ICAOLookup(icao);
+    if (!result || !result.tail_algorithm) return null;
 
-	return result.tail_algorithm(icao);
+    return result.tail_algorithm(icao);
 }

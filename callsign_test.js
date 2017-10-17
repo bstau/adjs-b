@@ -154,9 +154,9 @@ testThat('Determines correct country code from ICAO addresses', EXPECTED_TAIL_NU
     }));
 
 testThat('Resolves ICAO address to national tail number', EXPECTED_TAIL_NUMBERS.every(
-	function(input) {
+    function(input) {
         if (!input.tail_number) return true;
 
-		return assertEqual('ICAOToTailNumber(0x' + input.icao.toString(16) + ')',
-			input.tail_number, ICAOToTailNumber(input.icao));
-	}));
+        return assertEqual('ICAOToTailNumber(0x' + input.icao.toString(16) + ')',
+            input.tail_number, ICAOToTailNumber(input.icao));
+    }));
