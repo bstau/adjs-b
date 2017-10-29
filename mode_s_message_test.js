@@ -1,4 +1,4 @@
-var VALID_MESSAGES = [
+const VALID_MESSAGES = [
     {msg: '00C18C907F3101',
      properties: {df: DF_TCAS_SHORT, aa: 0xa4b583, ap: 0xa4b583,
                   vs: VS_AIRBORNE, x0: 0x18, ri: 3, x1: 0, ac: 0xC90,

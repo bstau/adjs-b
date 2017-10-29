@@ -2,10 +2,10 @@
  */
 
 /* The generator is 25 bits. */
-var CRC_GEN_LENGTH = 25;  
+const CRC_GEN_LENGTH = 25;  
 
 /* The CRC generator, left-justified. */
-var CRC_GEN = Uint8Array.from([0xFF, 0xFA, 0x04, 0x80]);
+const CRC_GEN = Uint8Array.from([0xFF, 0xFA, 0x04, 0x80]);
 
 
 function ModeSCRC(message, encode) {

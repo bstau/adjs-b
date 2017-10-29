@@ -1,4 +1,4 @@
-var TEST_CASES = [
+const TEST_CASES = [
     {ac: 0x0F4F, metric: true, simple: false},
     {ac: 0x0100, metric: false, simple: false, altitude_ft:  -1200},
     {ac: 0x0500, metric: false, simple: false, altitude_ft:  -1100},

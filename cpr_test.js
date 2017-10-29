@@ -1,4 +1,4 @@
-var NL_TEST_VECTORS = [
+const NL_TEST_VECTORS = [
     {lat: 0, nl: 59},
     {lat: -0, nl: 59},
     {lat: 1, nl: 59},
@@ -29,9 +29,9 @@ var NL_TEST_VECTORS = [
     {lat: -137, nl: 43},
 ];
 
-var AIRBORNE = CPR.NUM_BITS_AIRBORNE;
+const AIRBORNE = CPR.NUM_BITS_AIRBORNE;
 
-var CPR_TEST_VECTORS = [
+const CPR_TEST_VECTORS = [
     {lat: 0, lng: 0, bits: AIRBORNE, is_odd: false, cpr_lat: 0, cpr_lng: 0},
     {lat: 0, lng: 0, bits: AIRBORNE, is_odd: true,  cpr_lat: 0, cpr_lng: 0},
     // Test that almost-90 degrees is the maximal value.

@@ -1,6 +1,6 @@
 // All Call Replies and Extended Squitter messages contain plaintext addresses
 // and a valid CRC. These can be used as test cases to validate CRC calculation.
-var VALID_ENCODED_MESSAGES = [
+const VALID_ENCODED_MESSAGES = [
     '59A057B92BB985',
     '5DA25D05F5FCB9',
     '5FA9E89A332929',
@@ -12,7 +12,7 @@ var VALID_ENCODED_MESSAGES = [
 
 // Messages that make use of the combined Address/Parity field, along with a
 // pre-decoded address that we can use to validate the CRC implementation.
-var MESSAGES_WITH_PARITY_ENCODED_ADDRESSES = [
+const MESSAGES_WITH_PARITY_ENCODED_ADDRESSES = [
     {msg: '000001915FB76D', address: 0xA9A8FC},
     {msg: '00A1833B1082DB', address: 0xA791AC},
     {msg: '0261819ACE890E', address: 0xABB459},

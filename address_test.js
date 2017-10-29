@@ -1,4 +1,4 @@
-var EXPECTED_TAIL_NUMBERS = [
+const EXPECTED_TAIL_NUMBERS = [
     {icao: 0xA37646, country: 'US', tail_number: 'N322FL'},
     {icao: 0xA471AC, country: 'US', tail_number: 'N386AZ'},
     {icao: 0xA00725, country: 'US', tail_number: 'N10000'},
