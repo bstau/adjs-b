@@ -1,4 +1,4 @@
-const TEST_CASES = [
+const AC_TEST_CASES = [
     {ac: 0x0F4F, metric: true, simple: false},
     {ac: 0x0100, metric: false, simple: false, altitude_ft:  -1200},
     {ac: 0x0500, metric: false, simple: false, altitude_ft:  -1100},
@@ -42,21 +42,21 @@ const TEST_CASES = [
     {ac: 0x1fbf, metric: false, simple: true,  altitude_ft:  50175},
 ];
 
-testThat('Detects metric altitude codes', TEST_CASES.every(
+testThat('Detects metric altitude codes', AC_TEST_CASES.every(
     function(input) {
         return assertEqual(
             'AltitudeCode.IsMetric(0x' + input.ac.toString(16) + ')',
             input.metric, AltitudeCode.IsMetric(input.ac));
     }));
 
-testThat('Detects simple altitude format', TEST_CASES.every(
+testThat('Detects simple altitude format', AC_TEST_CASES.every(
     function(input) {
         return assertEqual(
             'AltitudeCode.IsSimpleFormat(0x' + input.ac.toString(16) + ')',
             input.simple, AltitudeCode.IsSimpleFormat(input.ac));
     }));
 
-testThat('Decodes imperial altitudes', TEST_CASES.every(
+testThat('Decodes imperial altitudes', AC_TEST_CASES.every(
     function(input) {
         if (input.metric) return true;
         if (input.altitude_ft === undefined) return true;
