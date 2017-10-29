@@ -1,4 +1,13 @@
-function USICAOToTailNumber(icao) {
+/** Routines to decode tail numbers from ICAO 24-bit addresses.
+ * @namespace
+ */
+var TailNumber = {};
+
+/** Decode a US tail number from an ICAO 24-bit address.
+ *
+ * @param {Number} icao  24-bit address
+ */
+TailNumber.FromUSICAO = function(icao) {
     // US tail numbers are variable length, and encoded as a suffix to the
     // standard country prefix (N). The first address of the US block is not
     // valid, and only a subset of the US's ICAO addresses are coded according
@@ -79,7 +88,11 @@ function USICAOToTailNumber(icao) {
     return tail_number;
 }
 
-function FRICAOToTailNumber(icao) {
+/** Decode a French tail number from an ICAO 24-bit address.
+ *
+ * @param {Number} icao 24-bit address
+ */
+TailNumber.FromFRICAO = function(icao) {
     // French tail numbers use a sensible bitmasking strategy for 24-bit
     // encoding; the bitfields are:
     //                 1       2
@@ -101,7 +114,11 @@ function FRICAOToTailNumber(icao) {
     return tail_number;
 }
 
-function CAICAOToTailNumber(icao) {
+/** Decode a Canadian tail number from an ICAO 24-bit address.
+ *
+ * @param {Number} icao 24-bit address
+ */
+TailNumber.FromCAICAO = function(icao) {
     // Canadian tail numbers are encoded as a fairly basic base-26 format,
     // consisting of a three-(26^3) ranges corresponding to CF-AAA..CI-ZZZ.
 
@@ -124,7 +141,12 @@ function CAICAOToTailNumber(icao) {
     return tail_number;
 }
 
-function AUICAOToTailNumber(icao) {
+/** Convert an ICAO address to an Australian tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromAUICAO = function(icao) {
     // Australian tail numbers are encoded as a fairly basic base-36 format,
     // consisting only of the three-letter suffix to the country prefix (VH).
 
@@ -143,7 +165,12 @@ function AUICAOToTailNumber(icao) {
         AU_TABLE[icao % AU_TABLE_LEN];
 }
 
-function DEICAOToTailNumber(icao) {
+/** Convert an ICAO address to a German tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromDEICAO = function(icao) {
     // German ICAO addresses are totally whacked.
 
     var DE_FIRST = '?AB';
@@ -227,7 +254,12 @@ function DEICAOToTailNumber(icao) {
 // Possibilities: DE, BE, DK, FI, CH, PT, GR, TR, RO, YU, RU, ZA
 // Done: AU, CA, US, FR
 
-var ICAO_PREFIXES = ([
+/** ICAO 24-bit Address-related functions.
+ * @namespace
+ */
+var Address = {};
+
+Address.PREFIXES = ([
   {prefix: '000000000000000000000000', location_name: 'INVALID', country_code: null},
   {prefix: '00000000010000', location_name: 'Zimbabwe', country_code: 'ZW'},
   {prefix: '000000000110', location_name: 'Mozambique', country_code: 'MZ'},
@@ -311,8 +343,8 @@ var ICAO_PREFIXES = ([
   {prefix: '00101', location_name: 'SAM', country_code: null},
   {prefix: '001100', location_name: 'Italy', country_code: 'IT'},
   {prefix: '001101', location_name: 'Spain', country_code: 'ES'},
-  {prefix: '001110', location_name: 'France', country_code: 'FR', tail_algorithm: FRICAOToTailNumber},
-  {prefix: '001111', location_name: 'Germany', country_code: 'DE', tail_algorithm: DEICAOToTailNumber},
+  {prefix: '001110', location_name: 'France', country_code: 'FR', tail_algorithm: TailNumber.FromFRICAO},
+  {prefix: '001111', location_name: 'Germany', country_code: 'DE', tail_algorithm: TailNumber.FromDEICAO},
   {prefix: '010000', location_name: 'United Kingdom', country_code: 'GB'},
   {prefix: '010001000', location_name: 'Austria', country_code: 'AT'},
   {prefix: '010001001', location_name: 'Belgium', country_code: 'BE'},
@@ -388,7 +420,7 @@ var ICAO_PREFIXES = ([
   {prefix: '011101110', location_name: 'Sri Lanka', country_code: 'LK'},
   {prefix: '011101111', location_name: 'Syrian Arab Republic', country_code: 'SY'},
   {prefix: '011110', location_name: 'China', country_code: 'CN'},
-  {prefix: '011111', location_name: 'Australia', country_code: 'AU', tail_algorithm: AUICAOToTailNumber},
+  {prefix: '011111', location_name: 'Australia', country_code: 'AU', tail_algorithm: TailNumber.FromAUICAO},
   {prefix: '100000', location_name: 'India', country_code: 'IN'},
   {prefix: '100001', location_name: 'Japan', country_code: 'JP'},
   {prefix: '100010000', location_name: 'Thailand', country_code: 'TH'},
@@ -405,9 +437,9 @@ var ICAO_PREFIXES = ([
   {prefix: '10010000000100', location_name: 'Cook Islands', country_code: 'CK'},
   {prefix: '10010000001000', location_name: 'Samoa', country_code: 'WS'},
   {prefix: '1001', location_name: 'NAM/PAC', country_code: null},
-  {prefix: '1010', location_name: 'United States', country_code: 'US', tail_algorithm: USICAOToTailNumber},
+  {prefix: '1010', location_name: 'United States', country_code: 'US', tail_algorithm: TailNumber.FromUSICAO},
   {prefix: '1011', location_name: 'RESERVED', country_code: null},
-  {prefix: '110000', location_name: 'Canada', country_code: 'CA', tail_algorithm: CAICAOToTailNumber},
+  {prefix: '110000', location_name: 'Canada', country_code: 'CA', tail_algorithm: TailNumber.FromCAICAO},
   {prefix: '110010000', location_name: 'New Zealand', country_code: 'NZ'},
   {prefix: '110010001000', location_name: 'Fiji', country_code: 'FJ'},
   {prefix: '11001000101000', location_name: 'Nauru', country_code: 'NR'},
@@ -443,8 +475,12 @@ var ICAO_PREFIXES = ([
     return a.prefix.length < b.prefix.length;
 });
 
-function ICAOLookup(icao) {
-    var results = ICAO_PREFIXES.filter(function(i) {
+/** Look up details about an address.
+ *
+ * @param {Number} icao 24-bit address
+ */
+Address.Lookup = function(icao) {
+    var results = Address.PREFIXES.filter(function(i) {
         return (icao & i.mask) === i.address;
     });
 
@@ -453,14 +489,31 @@ function ICAOLookup(icao) {
     return null;
 }
 
-function ICAOToCountry(icao) {
-    var result = ICAOLookup(icao);
+/** Determine which ISO country code an ICAO address belongs to.
+ *
+ * This will not necessarily be the operator's country of operation, but
+ * should be the country of registration for the plane.
+ *
+ * @param {Number} icao 24-bit address
+ * @return {String||null} 2-letter country code if found, or null.
+ */
+Address.ToCountry = function(icao) {
+    var result = Address.Lookup(icao);
     if (!result) return result;
     return result.country_code;
 }
 
-function ICAOToTailNumber(icao) {
-    var result = ICAOLookup(icao);
+/** Derive, if possible, a tail number from an ICAO 24-bit address.
+ *
+ * Some countries use deterministic algorithms to generate 24-bit addresses
+ * from tail numbers (aircraft registrations). For countries where the
+ * algorithm is implemented, find the tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+Address.ToTailNumber = function(icao) {
+    var result = Address.Lookup(icao);
     if (!result || !result.tail_algorithm) return null;
 
     return result.tail_algorithm(icao);

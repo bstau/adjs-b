@@ -149,14 +149,14 @@ var EXPECTED_TAIL_NUMBERS = [
 
 testThat('Determines correct country code from ICAO addresses', EXPECTED_TAIL_NUMBERS.every(
     function(input) {
-        return assertEqual('ICAOToCountry(0x' + input.icao.toString(16) + ')',
-            input.country, ICAOToCountry(input.icao));
+        return assertEqual('Address.ToCountry(0x' + input.icao.toString(16) + ')',
+            input.country, Address.ToCountry(input.icao));
     }));
 
 testThat('Resolves ICAO address to national tail number', EXPECTED_TAIL_NUMBERS.every(
     function(input) {
         if (!input.tail_number) return true;
 
-        return assertEqual('ICAOToTailNumber(0x' + input.icao.toString(16) + ')',
-            input.tail_number, ICAOToTailNumber(input.icao));
+        return assertEqual('Address.ToTailNumber(0x' + input.icao.toString(16) + ')',
+            input.tail_number, Address.ToTailNumber(input.icao));
     }));
