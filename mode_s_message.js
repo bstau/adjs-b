@@ -235,6 +235,22 @@ ModeSMessage.prototype.decodeExtSquitter = function() {
   }
 };
 
+/** Decode altitude for messages including an altitude code.
+ *
+ * @return {Number}  Altitude in feet.
+ */
+ModeSMessage.prototype.Altitude = function() {
+  // Use the cached altitude if present.
+  if (this.derivedAltitude !== null)
+    return this.derivedAltitude;
+
+  if (typeof(this.ac) != 'number')
+    throw "Not an altitude message.";
+
+  // Calculate and cache the altitude.
+  return this.derivedAltitude = AltitudeCode.ToFt(this.ac);
+}
+
 /** Decode climb rate for airborne velocity reports.
  *
  * @return {Number}  Climb rate, in feet/minute. Positive is ascent.
