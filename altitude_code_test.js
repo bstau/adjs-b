@@ -45,15 +45,15 @@ var TEST_CASES = [
 testThat('Detects metric altitude codes', TEST_CASES.every(
     function(input) {
         return assertEqual(
-            'AltitudeCodeIsMetric(0x' + input.ac.toString(16) + ')',
-            input.metric, AltitudeCodeIsMetric(input.ac));
+            'AltitudeCode.IsMetric(0x' + input.ac.toString(16) + ')',
+            input.metric, AltitudeCode.IsMetric(input.ac));
     }));
 
 testThat('Detects simple altitude format', TEST_CASES.every(
     function(input) {
         return assertEqual(
-            'AltitudeCodeIsSimpleFormat(0x' + input.ac.toString(16) + ')',
-            input.simple, AltitudeCodeIsSimpleFormat(input.ac));
+            'AltitudeCode.IsSimpleFormat(0x' + input.ac.toString(16) + ')',
+            input.simple, AltitudeCode.IsSimpleFormat(input.ac));
     }));
 
 testThat('Decodes imperial altitudes', TEST_CASES.every(
@@ -62,6 +62,6 @@ testThat('Decodes imperial altitudes', TEST_CASES.every(
         if (input.altitude_ft === undefined) return true;
 
         return assertEqual(
-            'AltitudeCodeToFt(0x' + input.ac.toString(16) + ')',
-            input.altitude_ft, AltitudeCodeToFt(input.ac));
+            'AltitudeCode.ToFt(0x' + input.ac.toString(16) + ')',
+            input.altitude_ft, AltitudeCode.ToFt(input.ac));
     }));
