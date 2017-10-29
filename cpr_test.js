@@ -29,7 +29,7 @@ var NL_TEST_VECTORS = [
     {lat: -137, nl: 43},
 ];
 
-var AIRBORNE = NUM_BITS_AIRBORNE;
+var AIRBORNE = CPR.NUM_BITS_AIRBORNE;
 
 var CPR_TEST_VECTORS = [
     {lat: 0, lng: 0, bits: AIRBORNE, is_odd: false, cpr_lat: 0, cpr_lng: 0},
@@ -45,13 +45,14 @@ var CPR_TEST_VECTORS = [
 
 testThat('Calculates correct number of longitude zones', NL_TEST_VECTORS.every(
     function(input) {
-        return assertEqual('NL(' + input.lat + ')', input.nl, NL(input.lat));
+        return assertEqual('CPR.NL(' + input.lat + ')', input.nl,
+            CPR.NL(input.lat));
     }));
 
 testThat('Calculates CPR for coordinates', CPR_TEST_VECTORS.every(
     function(input) {
-        var output = EncodeCPR(input.lat, input.lng, input.is_odd, input.bits);
-        var call = ('EncodeCPR(' + input.lat + ', ' + input.lng + ', ' +
+        var output = CPR.Encode(input.lat, input.lng, input.is_odd, input.bits);
+        var call = ('CPR.Encode(' + input.lat + ', ' + input.lng + ', ' +
                     input.is_odd + ', ' + input.bits + ')');
         return (
             assertEqual(call + '.lat', input.cpr_lat, output.lat) &&
