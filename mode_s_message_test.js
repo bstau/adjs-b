@@ -122,25 +122,28 @@ var VALID_MESSAGES = [
                   tc: TC_AIRCRAFT_OP_STATUS}},
     {msg: '8D780AE699450E35C0042788AB3B',
      properties: {df: DF_EXT_SQUITTER, aa: 0x780AE6, ap: 0x780AE6, 
-                  tc: TC_AIRBORNE_VELOCITY, st: 1, ic: 0, resv_a: 1,
-                  nac: 0, we_sign: 1, we: 0x10E, ns_sign: 0, ns: 0x1ae,
-                  vrsrc: 0, vr_sign: 0, vr: 1, resv_b: 0, baro_diff_sign: 0,
-                  baro_diff: 0x27}},
+                  tc: TC_AIRBORNE_VELOCITY, st: ABV_SUBTYPE_GROUNDSPEED,
+                  ic: 0, resv_a: 1, nac: 0, we_sign: 1, we: 0x10E, ns_sign: 0,
+                  ns: 0x1ae, vrsrc: VR_SRC_BAROMETRIC,
+                  vr_sign: VR_SIGN_ASCENDING, vr: 1, resv_b: 0,
+                  baro_diff_sign: 0, baro_diff: 0x27, decodeClimbRate: 0}},
     {msg: '8DA0C5C699105D99384C0CA7019F',
      properties: {df: DF_EXT_SQUITTER, aa: 0xA0C5C6, ap: 0xA0C5C6, 
-                  tc: TC_AIRBORNE_VELOCITY, st: 1, ic: 0, resv_a: 0, nac: 2,
-                  we_sign: 0, we: 0x5d, ns_sign: 1, ns: 0xc9, vrsrc: 1,
-                  vr_sign: 1, vr: 0x13, resv_b: 0, baro_diff_sign: 0,
-                  baro_diff: 0xc}},
+                  tc: TC_AIRBORNE_VELOCITY, st: ABV_SUBTYPE_GROUNDSPEED, ic: 0,
+                  resv_a: 0, nac: 2, we_sign: 0, we: 0x5d, ns_sign: 1, ns: 0xc9,
+                  vrsrc: VR_SRC_GEOMETRIC, vr_sign: VR_SIGN_DESCENDING,
+                  vr: 0x13, resv_b: 0, baro_diff_sign: 0, baro_diff: 0xc,
+                  decodeClimbRate: -1152}},
     {msg: '8DA037DA25184633C31CA030D5AA',
      properties: {df: DF_EXT_SQUITTER, aa: 0xA037DA, ap: 0xA037DA, 
                   tc: TC_AIRCRAFT_IDENTIFICATION_4, callsign: 'FDX3012 '}},
     {msg: '8DA037DA99099705F08C1150E3B9',
      properties: {df: DF_EXT_SQUITTER, aa: 0xA037DA, ap: 0xA037DA, 
-                  tc: TC_AIRBORNE_VELOCITY, st: 1, ic: 0, resv_a: 0, nac: 1,
-                  we_sign: 0, we: 0x197, ns_sign: 0, ns: 0x02F, vrsrc: 1,
-                  vr_sign: 0, vr: 0x23, resv_b: 0, baro_diff_sign: 0,
-                  baro_diff: 0x11}},
+                  tc: TC_AIRBORNE_VELOCITY, st: ABV_SUBTYPE_GROUNDSPEED, ic: 0,
+                  resv_a: 0, nac: 1, we_sign: 0, we: 0x197, ns_sign: 0,
+                  ns: 0x02F, vrsrc: VR_SRC_GEOMETRIC,
+                  vr_sign: VR_SIGN_ASCENDING, vr: 0x23, resv_b: 0,
+                  baro_diff_sign: 0, baro_diff: 0x11, decodeClimbRate: 2176}},
     {msg: '8DA037DAE1168A000000003EEF36',
      properties: {df: DF_EXT_SQUITTER, aa: 0xA037DA, ap: 0xA037DA, 
                   tc: TC_EXTENDED_SQUITTER_AC_STATUS}},
@@ -160,10 +163,11 @@ var VALID_MESSAGES = [
                   time: 0, cpr_odd: 0, lat_cpr: 0x07A47, lon_cpr: 0x029AE}},
     {msg: '8DABE00F9940F2A0A100179D5238',
      properties: {df: DF_EXT_SQUITTER, aa: 0xABE00F, ap: 0xABE00F, 
-                  tc: TC_AIRBORNE_VELOCITY, st: 1, ic: 0, resv_a: 1, nac: 0,
-                  we_sign: 0, we: 0x0f2, ns_sign: 1, ns: 0x105, vrsrc: 0,
-                  vr_sign: 0, vr: 0x040, resv_b: 0, baro_diff_sign: 0,
-                  baro_diff: 0x17}},
+                  tc: TC_AIRBORNE_VELOCITY, st: ABV_SUBTYPE_GROUNDSPEED, ic: 0,
+                  resv_a: 1, nac: 0, we_sign: 0, we: 0x0f2, ns_sign: 1,
+                  ns: 0x105, vrsrc: VR_SRC_BAROMETRIC,
+                  vr_sign: VR_SIGN_ASCENDING, vr: 0x040, resv_b: 0,
+                  baro_diff_sign: 0, baro_diff: 0x17, decodeClimbRate: 4032}},
 
     // DF_COMM_B_ALT
     {msg: 'A028121C020100000000007B20E6',
@@ -240,8 +244,15 @@ testThat('Decodes valid Mode S messages into fields', VALID_MESSAGES.every(
         var msg = new ModeSMessage(314, fromHexBuf(input.msg));
         assertEqual('ModeSMessage("' + input.msg + '").timestamp', 314, msg.timestamp);
         for (var propName in input.properties) {
-            isOK &= assertEqual('ModeSMessage("' + input.msg + '").' + propName,
-                                input.properties[propName], msg[propName]);
+            if (typeof(msg[propName]) == 'function') {
+                isOK &= assertEqual(
+                    'ModeSMessage("' + input.msg + '").' + propName + '()',
+                    input.properties[propName], msg[propName]());
+            } else {
+                isOK &= assertEqual(
+                    'ModeSMessage("' + input.msg + '").' + propName,
+                    input.properties[propName], msg[propName]);
+            }
         }
         return isOK;
     }));

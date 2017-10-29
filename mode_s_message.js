@@ -234,3 +234,21 @@ ModeSMessage.prototype.decodeExtSquitter = function() {
       break;
   }
 };
+
+/** Decode climb rate for airborne velocity reports.
+ *
+ * @return {Number}  Climb rate, in feet/minute. Positive is ascent.
+ */
+ModeSMessage.prototype.decodeClimbRate = function() {
+  if (this.tc != TC_AIRBORNE_VELOCITY) return;
+
+  // Check subtype to ensure that this payload contains vertical rate.
+  if (this.st != ABV_SUBTYPE_GROUNDSPEED && this.st != ABV_SUBTYPE_AIRSPEED) {
+    console.warn('Unrecognised AIRBORNE_VELOCITY subtype.');
+    return null
+  }
+
+  // Vertical rate units are in 64ft/min. Multiply out.
+  return ((this.vr - 1) * 64) * (this.vr_sign == VR_SIGN_ASCENDING ? 1 : -1);
+};
+

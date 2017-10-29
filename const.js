@@ -318,3 +318,28 @@ var ARA_CM0_MTI1_ALT_CROSSING = 0x0100;
 var ARA_CM0_MTI1_SENSE_REVERSAL = 0x0080;
 var ARA_CM0_MTI1_ACAS_III = 0x007F;
 
+/* Subtypes for Airborne Velocity messages. */
+var ABV_SUBTYPE_GROUNDSPEED = 1;
+var ABV_SUBTYPE_GROUNDSPEED_SUPERSONIC = 2;
+var ABV_SUBTYPE_AIRSPEED = 3;
+var ABV_SUBTYPE_AIRSPEED_SUPERSONIC = 4;
+
+/** Vertical Rate flag: rate is positive (ascending)
+ * @const
+ */
+var VR_SIGN_ASCENDING = 0;
+
+/** Vertical Rate flag: rate is negative (descending)
+ * @const
+ */
+var VR_SIGN_DESCENDING = 1;
+
+/** Vertical Rate flag: data source is barometric pressure.
+ * @const
+ */
+var VR_SRC_BAROMETRIC = 0;
+
+/** Vertical Rate flag: data source is geometric altitude (GNSS-derived).
+ * @const
+ */
+var VR_SRC_GEOMETRIC = 1;
