@@ -239,7 +239,7 @@ ModeSMessage.prototype.decodeExtSquitter = function() {
  *
  * @return {Number}  Climb rate, in feet/minute. Positive is ascent.
  */
-ModeSMessage.prototype.decodeClimbRate = function() {
+ModeSMessage.prototype.ClimbRate = function() {
   if (this.tc != TC_AIRBORNE_VELOCITY) return;
 
   // Check subtype to ensure that this payload contains vertical rate.
