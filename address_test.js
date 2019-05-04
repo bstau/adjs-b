@@ -128,6 +128,10 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x3EE07E, country: 'DE', tail_number: 'D-KZZA'},
     {icao: 0x3EE097, country: 'DE', tail_number: 'D-KZZZ'},
 
+    /* Mappings for German registrations get weird from here on.
+     * M-numbers are for ultralights, O-numbers for balloons, and digits for
+     * gliders and sailplanes. Still to be implemented. */
+
     {icao: 0x448421, country: 'BE', tail_number: 'OO-AAA'},
     {icao: 0x448432, country: 'BE', tail_number: 'OO-AAR'},
     {icao: 0x448441, country: 'BE', tail_number: 'OO-ABA'},
@@ -145,9 +149,7 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x44E193, country: 'BE', tail_number: 'OO-XLS'},
     {icao: 0x44DED3, country: 'BE', tail_number: 'OO-WVS'},
 
-    /* Mappings for German registrations get weird from here on.
-     * M-numbers are for ultralights, O-numbers for balloons, and digits for
-     * gliders and sailplanes. Still to be implemented. */
+    /* Belgium has a whole range (0xDD9A/DD9B) for gliders too. */
 
     // The UK does not have predictable tail number to ICAO mappings.
     {icao: 0x404000, country: 'GB'},
