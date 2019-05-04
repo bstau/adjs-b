@@ -166,6 +166,14 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x465BBA, country: 'FI', tail_number: 'OH-1002'},
     {icao: 0x465BC2, country: 'FI', tail_number: 'OH-1010'},
 
+    {icao: 0x4B0034, country: 'CH', tail_number: 'HB-ACA'},
+    {icao: 0x4B02C7, country: 'CH', tail_number: 'HB-BBJ'},
+    {icao: 0x4B02CE, country: 'CH', tail_number: 'HB-BBQ'},
+    {icao: 0x4B02DE, country: 'CH', tail_number: 'HB-BCG'},
+    {icao: 0x4B17F9, country: 'CH', tail_number: 'HB-JCB'},
+    {icao: 0x4B445C, country: 'CH', tail_number: 'HB-ZXC'},
+    {icao: 0x4B448D, country: 'CH', tail_number: 'HB-ZYZ'},
+
     // The UK does not have predictable tail number to ICAO mappings.
     {icao: 0x404000, country: 'GB'},
     {icao: 0x404001, country: 'GB'},

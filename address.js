@@ -324,7 +324,37 @@ TailNumber.FromFIICAO = function(icao) {
   return null;
 }
 
-// Possibilities: DK, CH, PT, GR, TR, RO, YU, RU, ZA
+/** Convert an ICAO address to a Swiss tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromCHICAO = function(icao) {
+	const MIN_CH_ICAO = 0x4B0000;
+	const MAX_CH_ICAO = 0x4B7FFF;
+
+  const MAX_CH_ICAO_ALPHA = MIN_CH_ICAO + (26*26*26);
+
+  // Tail letters are simple, for alphabetic range.
+  const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  // Range check, please.
+  if (icao < MIN_CH_ICAO) return null;
+  if (icao > MAX_CH_ICAO) return null;
+
+  if (icao < MAX_CH_ICAO_ALPHA) {
+    // Calculate where we are within the alpha block.
+    var offset = icao - MIN_CH_ICAO;
+
+    return 'HB-' + CHARSET[Math.floor(offset / (26 * 26))] +
+        CHARSET[Math.floor((offset / 26) % 26)] +
+        CHARSET[offset % 26];
+  }
+
+  return null;
+}
+
+// Possibilities: DK, PT, GR, TR, RO, YU, RU, ZA
 // Done: AU, CA, US, FR, DE, BE, FI
 
 /** ICAO 24-bit Address-related functions.
@@ -433,7 +463,7 @@ Address.PREFIXES = ([
   {prefix: '010010011', location_name: 'Czech Republic', country_code: 'CZ'},
   {prefix: '010010100', location_name: 'Romania', country_code: 'RO'},
   {prefix: '010010101', location_name: 'Sweden', country_code: 'SE'},
-  {prefix: '010010110', location_name: 'Switzerland', country_code: 'CH'},
+  {prefix: '010010110', location_name: 'Switzerland', country_code: 'CH', tail_algorithm: TailNumber.FromCHICAO},
   {prefix: '010010111', location_name: 'Turkey', country_code: 'TR'},
   {prefix: '010011000', location_name: 'Yugoslavia', country_code: 'YU'},
   {prefix: '01001100100000', location_name: 'Cyprus', country_code: 'CY'},
