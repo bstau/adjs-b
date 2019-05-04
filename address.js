@@ -324,8 +324,8 @@ TailNumber.FromFIICAO = function(icao) {
   return null;
 }
 
-// Possibilities: DK, FI, CH, PT, GR, TR, RO, YU, RU, ZA
-// Done: AU, CA, US, FR, DE, BE
+// Possibilities: DK, CH, PT, GR, TR, RO, YU, RU, ZA
+// Done: AU, CA, US, FR, DE, BE, FI
 
 /** ICAO 24-bit Address-related functions.
  * @namespace
