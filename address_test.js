@@ -128,6 +128,23 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x3EE07E, country: 'DE', tail_number: 'D-KZZA'},
     {icao: 0x3EE097, country: 'DE', tail_number: 'D-KZZZ'},
 
+    {icao: 0x448421, country: 'BE', tail_number: 'OO-AAA'},
+    {icao: 0x448432, country: 'BE', tail_number: 'OO-AAR'},
+    {icao: 0x448441, country: 'BE', tail_number: 'OO-ABA'},
+    {icao: 0x448463, country: 'BE', tail_number: 'OO-ACC'},
+    {icao: 0x448483, country: 'BE', tail_number: 'OO-ADC'},
+    {icao: 0x448616, country: 'BE', tail_number: 'OO-APV'},
+    {icao: 0x44AC21, country: 'BE', tail_number: 'OO-KAA'},
+    {icao: 0x44C0A7, country: 'BE', tail_number: 'OO-PEG'},
+    {icao: 0x44C831, country: 'BE', tail_number: 'OO-RAQ'},
+    {icao: 0x44D024, country: 'BE', tail_number: 'OO-TAD'},
+    {icao: 0x44D5FA, country: 'BE', tail_number: 'OO-UOZ'},
+    {icao: 0x44D841, country: 'BE', tail_number: 'OO-VBA'},
+    {icao: 0x44D8D2, country: 'BE', tail_number: 'OO-VFR'},
+    {icao: 0x44D962, country: 'BE', tail_number: 'OO-VKB'},
+    {icao: 0x44E193, country: 'BE', tail_number: 'OO-XLS'},
+    {icao: 0x44DED3, country: 'BE', tail_number: 'OO-WVS'},
+
     /* Mappings for German registrations get weird from here on.
      * M-numbers are for ultralights, O-numbers for balloons, and digits for
      * gliders and sailplanes. Still to be implemented. */

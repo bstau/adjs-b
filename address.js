@@ -251,8 +251,40 @@ TailNumber.FromDEICAO = function(icao) {
     }
 }
 
-// Possibilities: DE, BE, DK, FI, CH, PT, GR, TR, RO, YU, RU, ZA
-// Done: AU, CA, US, FR
+/** Convert an ICAO address to a Belgian tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromBEICAO = function(icao) {
+	const MIN_BE_ICAO = 0x448000;
+	const MAX_BE_ICAO = 0x44FFFF;
+
+  // Belgian numbers are nice and simple. They have a predefined character set:
+  const CHARSET = '?ABCDEFGHIJKLMNOPQRSTUVWXYZ?????';
+
+  // The first digit is assigned on a 0x400 interval.
+  const FIRST_DIGIT_SCALE = 0x400;
+
+  // The second digit is assigned on an 0x20 interval.
+  const SECOND_DIGIT_SCALE = 0x20;
+
+  // And then the third digit is assiged within those 32 characters.
+
+  // Range check, please.
+  if (icao < MIN_BE_ICAO) return null;
+  if (icao > MAX_BE_ICAO) return null;
+
+  // Calculate where we are within the BE block.
+  var offset = icao - MIN_BE_ICAO;
+
+  return 'OO-' + CHARSET[Math.floor(offset / FIRST_DIGIT_SCALE)] +
+      CHARSET[Math.floor((offset % FIRST_DIGIT_SCALE) / SECOND_DIGIT_SCALE)] +
+      CHARSET[offset % SECOND_DIGIT_SCALE];
+}
+
+// Possibilities: DK, FI, CH, PT, GR, TR, RO, YU, RU, ZA
+// Done: AU, CA, US, FR, DE, BE
 
 /** ICAO 24-bit Address-related functions.
  * @namespace
@@ -347,7 +379,7 @@ Address.PREFIXES = ([
   {prefix: '001111', location_name: 'Germany', country_code: 'DE', tail_algorithm: TailNumber.FromDEICAO},
   {prefix: '010000', location_name: 'United Kingdom', country_code: 'GB'},
   {prefix: '010001000', location_name: 'Austria', country_code: 'AT'},
-  {prefix: '010001001', location_name: 'Belgium', country_code: 'BE'},
+  {prefix: '010001001', location_name: 'Belgium', country_code: 'BE', tail_algorithm: TailNumber.FromBEICAO},
   {prefix: '010001010', location_name: 'Bulgaria', country_code: 'BG'},
   {prefix: '010001011', location_name: 'Denmark', country_code: 'DK'},
   {prefix: '010001100', location_name: 'Finland', country_code: 'FI'},
