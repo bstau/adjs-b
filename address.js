@@ -406,8 +406,27 @@ TailNumber.FromGRICAO = function(icao) {
   return TailNumber.FromOffset32(offset, 'SX-');
 }
 
-// Possibilities: DK, TR, RO, YU, RU, ZA
-// Done: AU, CA, US, FR, DE, BE, FI, PT, CH, GR
+/** Convert an ICAO address to a Romanian tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromROICAO = function(icao) {
+	const MIN_RO_ICAO = 0x4A0000;
+	const MAX_RO_ICAO = 0x4A7FFF;
+
+  // Range check, please.
+  if (icao < MIN_RO_ICAO) return null;
+  if (icao > MAX_RO_ICAO) return null;
+
+  // Calculate where we are within the RO block.
+  var offset = icao - MIN_RO_ICAO;
+
+  return TailNumber.FromOffset32(offset, 'YR-');
+}
+
+// Possibilities: DK, TR, YU, RU, ZA
+// Done: AU, CA, US, FR, DE, BE, FI, PT, CH, GR, RO
 
 /** ICAO 24-bit Address-related functions.
  * @namespace
@@ -513,7 +532,7 @@ Address.PREFIXES = ([
   {prefix: '010010001', location_name: 'Poland', country_code: 'PL'},
   {prefix: '010010010', location_name: 'Portugal', country_code: 'PT', tail_algorithm: TailNumber.FromPTICAO},
   {prefix: '010010011', location_name: 'Czech Republic', country_code: 'CZ'},
-  {prefix: '010010100', location_name: 'Romania', country_code: 'RO'},
+  {prefix: '010010100', location_name: 'Romania', country_code: 'RO', tail_algorithm: TailNumber.FromROICAO},
   {prefix: '010010101', location_name: 'Sweden', country_code: 'SE'},
   {prefix: '010010110', location_name: 'Switzerland', country_code: 'CH', tail_algorithm: TailNumber.FromCHICAO},
   {prefix: '010010111', location_name: 'Turkey', country_code: 'TR'},

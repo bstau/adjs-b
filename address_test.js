@@ -181,6 +181,9 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x4690EE, country: 'GR', tail_number: 'SX-DGN'},
     {icao: 0x46B428, country: 'GR', tail_number: 'SX-MAH'},
 
+    {icao: 0x4A0833, country: 'RO', tail_number: 'YR-BAS'},
+    {icao: 0x4A08E6, country: 'RO', tail_number: 'YR-BGF'},
+
     // The UK does not have predictable tail number to ICAO mappings.
     {icao: 0x404000, country: 'GB'},
     {icao: 0x404001, country: 'GB'},
