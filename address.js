@@ -159,7 +159,7 @@ TailNumber.FromAUICAO = function(icao) {
     if (icao > AU_MAX_ICAO) return null;
 
     icao -= AU_MIN_ICAO;
-    return 'VH-' + 
+    return 'VH-' +
         AU_TABLE[Math.floor(icao / Math.pow(AU_TABLE_LEN, 2))] +
         AU_TABLE[Math.floor(icao / AU_TABLE_LEN) % AU_TABLE_LEN] +
         AU_TABLE[icao % AU_TABLE_LEN];
@@ -227,7 +227,7 @@ TailNumber.FromDEICAO = function(icao) {
     case 0x16:
     case 0x17:
         if (icao <= 0x3EE097) {
-            return 'D-' + 
+            return 'D-' +
                 DE_UPPER[Math.floor((icao - 0x3D0000) / Math.pow(26, 3))] +
                 DE_TABLE[1 + Math.floor((icao - 0x3D0000) / (26 * 26)) % 26] +
                 DE_TABLE[1 + Math.floor((icao - 0x3D0000) / 26) % 26] +
@@ -241,7 +241,7 @@ TailNumber.FromDEICAO = function(icao) {
     case 0x1f:
         // At this point, we're no longer tightly packing tail numbers like
         // we were above. Ugh.
-        return 'D-' + 
+        return 'D-' +
             DE_UPPER[Math.floor((icao - 0x3DC5DA) / Math.pow(26, 3))] +
             DE_TABLE[1 + Math.floor((icao - 0x3DC5DA) / (26 * 26)) % 26] +
             DE_TABLE[1 + Math.floor((icao - 0x3DC5DA) / 26) % 26] +
@@ -281,6 +281,47 @@ TailNumber.FromBEICAO = function(icao) {
   return 'OO-' + CHARSET[Math.floor(offset / FIRST_DIGIT_SCALE)] +
       CHARSET[Math.floor((offset % FIRST_DIGIT_SCALE) / SECOND_DIGIT_SCALE)] +
       CHARSET[offset % SECOND_DIGIT_SCALE];
+}
+
+/** Convert an ICAO address to a Finnish tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromFIICAO = function(icao) {
+	const MIN_FI_ICAO = 0x460000;
+	const MAX_FI_ICAO = 0x467FFF;
+
+  const MAX_FI_ICAO_ALPHA = (26*26*26) + MIN_FI_ICAO;
+
+  // Not a typo; they obviously went for a round decimal number as the base of
+  // this range, instead of a round hex number.
+  const MIN_FI_ICAO_NUM = 4610000; // = 0x4657D0
+  // totally a guess; only observed up to OH-1024
+  const MAX_FI_ICAO_NUM = MIN_FI_ICAO_NUM + 1200;
+
+  // Finnish tail letters are simple, for alphabetic range.
+  const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  // Range check, please.
+  if (icao < MIN_FI_ICAO) return null;
+  if (icao > MAX_FI_ICAO) return null;
+
+  if (icao < MAX_FI_ICAO_ALPHA) {
+    // Calculate where we are within the alpha block.
+    var offset = icao - MIN_FI_ICAO;
+
+    return 'OH-' + CHARSET[Math.floor(offset / (26 * 26))] +
+        CHARSET[Math.floor((offset / 26) % 26)] +
+        CHARSET[offset % 26];
+  }
+
+  if ((icao >= MIN_FI_ICAO_NUM) && (icao <= MAX_FI_ICAO_NUM)) {
+    var offset = icao - MIN_FI_ICAO_NUM;
+    return 'OH-' + offset.toString(10);
+  }
+
+  return null;
 }
 
 // Possibilities: DK, FI, CH, PT, GR, TR, RO, YU, RU, ZA
@@ -382,7 +423,7 @@ Address.PREFIXES = ([
   {prefix: '010001001', location_name: 'Belgium', country_code: 'BE', tail_algorithm: TailNumber.FromBEICAO},
   {prefix: '010001010', location_name: 'Bulgaria', country_code: 'BG'},
   {prefix: '010001011', location_name: 'Denmark', country_code: 'DK'},
-  {prefix: '010001100', location_name: 'Finland', country_code: 'FI'},
+  {prefix: '010001100', location_name: 'Finland', country_code: 'FI', tail_algorithm: TailNumber.FromFIICAO},
   {prefix: '010001101', location_name: 'Greece', country_code: 'GR'},
   {prefix: '010001110', location_name: 'Hungary', country_code: 'HU'},
   {prefix: '010001111', location_name: 'Norway', country_code: 'NO'},
@@ -498,7 +539,7 @@ Address.PREFIXES = ([
     var shift_by = (24 - prefix_length);
     var mask_value = ((1 << prefix_length) - 1) << shift_by;
 
-    entry.mask = mask_value; 
+    entry.mask = mask_value;
     entry.address = Number.parseInt(entry.prefix, 2) << shift_by;
     return entry;
 }).sort(function(a, b) {

@@ -151,6 +151,21 @@ const EXPECTED_TAIL_NUMBERS = [
 
     /* Belgium has a whole range (0xDD9A/DD9B) for gliders too. */
 
+    {icao: 0x460041, country: 'FI', tail_number: 'OH-ACN'},
+    {icao: 0x46005A, country: 'FI', tail_number: 'OH-ADM'},
+    {icao: 0x460074, country: 'FI', tail_number: 'OH-AEM'},
+    {icao: 0x4601E0, country: 'FI', tail_number: 'OH-ASM'},
+    {icao: 0x46053A, country: 'FI', tail_number: 'OH-BZM'},
+    {icao: 0x461FA5, country: 'FI', tail_number: 'OH-LZP'},
+    {icao: 0x461F49, country: 'FI', tail_number: 'OH-LWB'},
+    {icao: 0x463F27, country: 'FI', tail_number: 'OH-XXV'},
+    {icao: 0x46427F, country: 'FI', tail_number: 'OH-ZET'},
+    {icao: 0x46594F, country: 'FI', tail_number: 'OH-383'},
+    {icao: 0x465958, country: 'FI', tail_number: 'OH-392'},
+    {icao: 0x465A56, country: 'FI', tail_number: 'OH-646'},
+    {icao: 0x465BBA, country: 'FI', tail_number: 'OH-1002'},
+    {icao: 0x465BC2, country: 'FI', tail_number: 'OH-1010'},
+
     // The UK does not have predictable tail number to ICAO mappings.
     {icao: 0x404000, country: 'GB'},
     {icao: 0x404001, country: 'GB'},
