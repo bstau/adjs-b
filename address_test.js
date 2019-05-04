@@ -174,6 +174,10 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x4B445C, country: 'CH', tail_number: 'HB-ZXC'},
     {icao: 0x4B448D, country: 'CH', tail_number: 'HB-ZYZ'},
 
+    {icao: 0x49106C, country: 'PT', tail_number: 'CS-DCL'},
+    {icao: 0x495285, country: 'PT', tail_number: 'CS-TTE'},
+    {icao: 0x4952C2, country: 'PT', tail_number: 'CS-TVB'},
+
     // The UK does not have predictable tail number to ICAO mappings.
     {icao: 0x404000, country: 'GB'},
     {icao: 0x404001, country: 'GB'},

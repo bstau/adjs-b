@@ -251,16 +251,15 @@ TailNumber.FromDEICAO = function(icao) {
     }
 }
 
-/** Convert an ICAO address to a Belgian tail number.
+/** Convert an ICAO address offset to a tail number suffix.
  *
+ * For countries that use 5-bit packing.
+
  * @param {Number} icao 24-bit address.
  * @return {String||null}
  */
-TailNumber.FromBEICAO = function(icao) {
-	const MIN_BE_ICAO = 0x448000;
-	const MAX_BE_ICAO = 0x44FFFF;
-
-  // Belgian numbers are nice and simple. They have a predefined character set:
+TailNumber.FromOffset32 = function(offset, prefix) {
+  // Tail numbers are nice and simple. They have a predefined character set:
   const CHARSET = '?ABCDEFGHIJKLMNOPQRSTUVWXYZ?????';
 
   // The first digit is assigned on a 0x400 interval.
@@ -272,15 +271,30 @@ TailNumber.FromBEICAO = function(icao) {
   // And then the third digit is assiged within those 32 characters.
 
   // Range check, please.
+  if (offset > (FIRST_DIGIT_SCALE * SECOND_DIGIT_SCALE)) return null;
+
+  return prefix + CHARSET[Math.floor(offset / FIRST_DIGIT_SCALE)] +
+      CHARSET[Math.floor((offset % FIRST_DIGIT_SCALE) / SECOND_DIGIT_SCALE)] +
+      CHARSET[offset % SECOND_DIGIT_SCALE];
+}
+
+/** Convert an ICAO address to a Belgian tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromBEICAO = function(icao) {
+	const MIN_BE_ICAO = 0x448000;
+	const MAX_BE_ICAO = 0x44FFFF;
+
+  // Range check, please.
   if (icao < MIN_BE_ICAO) return null;
   if (icao > MAX_BE_ICAO) return null;
 
   // Calculate where we are within the BE block.
   var offset = icao - MIN_BE_ICAO;
 
-  return 'OO-' + CHARSET[Math.floor(offset / FIRST_DIGIT_SCALE)] +
-      CHARSET[Math.floor((offset % FIRST_DIGIT_SCALE) / SECOND_DIGIT_SCALE)] +
-      CHARSET[offset % SECOND_DIGIT_SCALE];
+  return TailNumber.FromOffset32(offset, 'OO-');
 }
 
 /** Convert an ICAO address to a Finnish tail number.
@@ -354,7 +368,26 @@ TailNumber.FromCHICAO = function(icao) {
   return null;
 }
 
-// Possibilities: DK, PT, GR, TR, RO, YU, RU, ZA
+/** Convert an ICAO address to a Portugese tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromPTICAO = function(icao) {
+	const MIN_PT_ICAO = 0x490000;
+	const MAX_PT_ICAO = 0x497FFF;
+
+  // Range check, please.
+  if (icao < MIN_PT_ICAO) return null;
+  if (icao > MAX_PT_ICAO) return null;
+
+  // Calculate where we are within the PT block.
+  var offset = icao - MIN_PT_ICAO;
+
+  return TailNumber.FromOffset32(offset, 'CS-');
+}
+
+// Possibilities: DK, GR, TR, RO, YU, RU, ZA
 // Done: AU, CA, US, FR, DE, BE, FI
 
 /** ICAO 24-bit Address-related functions.
@@ -459,7 +492,7 @@ Address.PREFIXES = ([
   {prefix: '010001111', location_name: 'Norway', country_code: 'NO'},
   {prefix: '010010000', location_name: 'Netherlands, Kingdom of the', country_code: 'NL'},
   {prefix: '010010001', location_name: 'Poland', country_code: 'PL'},
-  {prefix: '010010010', location_name: 'Portugal', country_code: 'PT'},
+  {prefix: '010010010', location_name: 'Portugal', country_code: 'PT', tail_algorithm: TailNumber.FromPTICAO},
   {prefix: '010010011', location_name: 'Czech Republic', country_code: 'CZ'},
   {prefix: '010010100', location_name: 'Romania', country_code: 'RO'},
   {prefix: '010010101', location_name: 'Sweden', country_code: 'SE'},
