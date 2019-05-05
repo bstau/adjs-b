@@ -132,6 +132,11 @@ const EXPECTED_TAIL_NUMBERS = [
      * M-numbers are for ultralights, O-numbers for balloons, and digits for
      * gliders and sailplanes. Still to be implemented. */
 
+    {icao: 0x45A1D6, country: 'DK', tail_number: 'OY-HNV'},
+    {icao: 0x45B86F, country: 'DK', tail_number: 'OY-NCO'},
+    {icao: 0x45EB5A, country: 'DK', tail_number: 'OY-ZZZ'},
+    // Numeric tail numbers in Denmark do not follow a 1:1 mapping with ICAO24
+
     {icao: 0x448421, country: 'BE', tail_number: 'OO-AAA'},
     {icao: 0x448432, country: 'BE', tail_number: 'OO-AAR'},
     {icao: 0x448441, country: 'BE', tail_number: 'OO-ABA'},
@@ -188,6 +193,12 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x147537, country: 'RU', tail_number: 'RA-30007'},
     {icao: 0x14A558, country: 'RU', tail_number: 'RA-42328'},
     {icao: 0x157707, country: 'RU', tail_number: 'RA-96007'},
+
+    {icao: 0x4B8421, country: 'TR', tail_number: 'TC-AAA'},
+    {icao: 0x4B9902, country: 'TR', tail_number: 'TC-FHB'},
+    {icao: 0x4BA4A8, country: 'TR', tail_number: 'TC-IEH'},
+    {icao: 0x4BCC4E, country: 'TR', tail_number: 'TC-SBN'},
+    {icao: 0x4BE721, country: 'TR', tail_number: 'TC-YYA'},
 
     {icao: 0x00801B, country: 'ZA', tail_number: 'ZS-AAK'},
     {icao: 0x00801C, country: 'ZA', tail_number: 'ZS-AAL'},

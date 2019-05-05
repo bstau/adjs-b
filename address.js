@@ -3,115 +3,102 @@
  */
 var TailNumber = {};
 
-/** Decode a US tail number from an ICAO 24-bit address.
+/** Convert an ICAO address offset to a tail number.
  *
- * @param {Number} icao  24-bit address
+ * For countries that use 5-bit packing.
+ *
+ * @param {Number} icao 24-bit address.
+ * @param {String} Tail number prefix to prepend to the returned value.
+ * @return {String||null}
  */
-TailNumber.FromUSICAO = function(icao) {
-    // US tail numbers are variable length, and encoded as a suffix to the
-    // standard country prefix (N). The first address of the US block is not
-    // valid, and only a subset of the US's ICAO addresses are coded according
-    // to this scheme.
+TailNumber.FromOffset32 = function(offset, prefix) {
+  // Tail numbers are nice and simple. They have a predefined character set:
+  const CHARSET = '?ABCDEFGHIJKLMNOPQRSTUVWXYZ?????';
 
-    var US_MIN_ICAO = 0xA00001;
-    var US_MAX_ICAO = 0xADF7C7;
+  // The first digit is assigned on a 0x400 interval.
+  const FIRST_DIGIT_SCALE = 0x400;
 
-    // Character space for US tail numbers. The letters I and O are deliberately
-    // excluded to reduce confusion.
-    var US_TABLE_DIG1 = '123456789';
-    var US_TABLE_DIG2 = '0123456789';
-    var US_TABLE_ALPHA = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  // The second digit is assigned on an 0x20 interval.
+  const SECOND_DIGIT_SCALE = 0x20;
 
-    // Each first digit has this much key space.
-    var DIGIT_1 = 101711;
-    var DIGIT_2 = 10111;
-    var DIGIT_3 = 951;
-    var DIGIT_4 = US_TABLE_ALPHA.length + US_TABLE_DIG2.length + 1;
+  // And then the third digit is assiged within those 32 characters.
 
-    // Remainders of less than this specify a letter suffix.
-    var LAST_DIGIT = 601;
+  // Range check, please.
+  if (offset > (FIRST_DIGIT_SCALE * SECOND_DIGIT_SCALE)) return null;
 
-    US_MAX_ICAO = US_MIN_ICAO + US_TABLE_DIG1.length * DIGIT_1 - 1;
+  const tail = prefix + CHARSET[Math.floor(offset / FIRST_DIGIT_SCALE)] +
+      CHARSET[Math.floor((offset % FIRST_DIGIT_SCALE) / SECOND_DIGIT_SCALE)] +
+      CHARSET[offset % SECOND_DIGIT_SCALE];
 
-    if (icao < US_MIN_ICAO) return null;
-    if (icao > US_MAX_ICAO) return null;
-
-
-    var tail_number = 'N';
-    var trailing_letters = true;
-
-    // Extract the first letter.
-    icao -= US_MIN_ICAO;
-    tail_number += US_TABLE_DIG1[Math.floor(icao / DIGIT_1)];
-    icao %= DIGIT_1;
-
-    // Extract the second digit.
-    if (icao >= LAST_DIGIT) {
-        tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_2)];
-        icao -= LAST_DIGIT;
-        icao %= DIGIT_2;
-    }
-
-    // Extract the third digit.
-    if (icao >= LAST_DIGIT) {
-        tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_3)];
-        icao -= LAST_DIGIT;
-        icao %= DIGIT_3;
-    }
-
-    // Extract the fourth digit. If present, the fifth digit may include either
-    // a letter or a number. The coding scheme needs this information later on.
-    if (icao >= LAST_DIGIT) {
-        trailing_letters = false;
-        tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_4)];
-        icao -= LAST_DIGIT;
-        icao %= DIGIT_4;
-    }
-
-    // If we have a digit in the fifth position, bail out without trying to find
-    // any tail letters.
-    if (!trailing_letters && icao > US_TABLE_ALPHA.length) {
-        tail_number += US_TABLE_DIG2[icao - (US_TABLE_ALPHA.length + 1)];
-        return tail_number;
-    }
-
-    if (trailing_letters && icao) {
-        icao -= 1;
-        tail_number += US_TABLE_ALPHA[Math.floor(icao / 25)];
-        icao %= 25;
-    }
-
-    if (icao) {
-        tail_number += US_TABLE_ALPHA[icao - 1];
-    }
-
-    return tail_number;
+  if (tail.indexOf('?') >= 0) return null;
+  return tail;
 }
 
-/** Decode a French tail number from an ICAO 24-bit address.
+/** Convert an ICAO address offset to a tail number.
  *
- * @param {Number} icao 24-bit address
+ * For countries that use tight packing of the latin alphabet (keyspace of
+ * 26^3) for a three-character suffix.
+ *
+ * @param {Number} icao 24-bit address.
+ * @param {String} Tail number prefix to prepend to the returned value.
+ * @return {String||null}
  */
-TailNumber.FromFRICAO = function(icao) {
-    // French tail numbers use a sensible bitmasking strategy for 24-bit
-    // encoding; the bitfields are:
-    //                 1       2
-    // 0...,...8...,...6...,...4
-    // [ fr ][2][ 3 ][ 4 ][ 5 ]
+TailNumber.FromOffset26 = function(offset, prefix) {
+  const MAX_ALPHA = (26*26*26);
 
-    var FR_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ??????';
-    var FR_PREFIX = 'B?GHO???';
-    var FR_MIN_ICAO = 0x380000;
-    var FR_MAX_ICAO = 0x3A6739;
+  // Finnish tail letters are simple, for alphabetic range.
+  const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    if (icao < FR_MIN_ICAO) return null;
-    if (icao > FR_MAX_ICAO) return null;
+  // Range check, please.
+  if (offset < 0) return null;
+  if (offset >= MAX_ALPHA) return null;
 
-    var tail_number = 'F-' + FR_PREFIX[(icao >> 15) & 0xF] +
-        FR_TABLE[(icao >> 10) & 0x1F] +
-        FR_TABLE[(icao >> 5) & 0x1F] +
-        FR_TABLE[icao & 0x1F];
-    return tail_number;
+  return prefix + CHARSET[Math.floor(offset / (26 * 26))] +
+      CHARSET[Math.floor((offset / 26) % 26)] +
+      CHARSET[offset % 26];
+}
+
+/** Convert an ICAO address to an Australian tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromAUICAO = function(icao) {
+    // Australian tail numbers are encoded as a fairly basic base-36 format,
+    // consisting only of the three-letter suffix to the country prefix (VH).
+
+    var AU_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ          ';
+    var AU_TABLE_LEN = AU_TABLE.length;
+    var AU_MIN_ICAO = 0x7C0000;
+    var AU_MAX_ICAO = AU_MIN_ICAO + Math.pow(AU_TABLE_LEN, 3) - 1;
+
+    if (icao < AU_MIN_ICAO) return null;
+    if (icao > AU_MAX_ICAO) return null;
+
+    icao -= AU_MIN_ICAO;
+    return 'VH-' +
+        AU_TABLE[Math.floor(icao / Math.pow(AU_TABLE_LEN, 2))] +
+        AU_TABLE[Math.floor(icao / AU_TABLE_LEN) % AU_TABLE_LEN] +
+        AU_TABLE[icao % AU_TABLE_LEN];
+}
+
+/** Convert an ICAO address to a Belgian tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromBEICAO = function(icao) {
+	const MIN_BE_ICAO = 0x448000;
+	const MAX_BE_ICAO = 0x44FFFF;
+
+  // Range check, please.
+  if (icao < MIN_BE_ICAO) return null;
+  if (icao > MAX_BE_ICAO) return null;
+
+  // Calculate where we are within the BE block.
+  var offset = icao - MIN_BE_ICAO;
+
+  return TailNumber.FromOffset32(offset, 'OO-');
 }
 
 /** Decode a Canadian tail number from an ICAO 24-bit address.
@@ -141,28 +128,34 @@ TailNumber.FromCAICAO = function(icao) {
     return tail_number;
 }
 
-/** Convert an ICAO address to an Australian tail number.
+/** Convert an ICAO address to a Swiss tail number.
  *
  * @param {Number} icao 24-bit address.
  * @return {String||null}
  */
-TailNumber.FromAUICAO = function(icao) {
-    // Australian tail numbers are encoded as a fairly basic base-36 format,
-    // consisting only of the three-letter suffix to the country prefix (VH).
+TailNumber.FromCHICAO = function(icao) {
+	const MIN_CH_ICAO = 0x4B0000;
+	const MAX_CH_ICAO = 0x4B7FFF;
 
-    var AU_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ          ';
-    var AU_TABLE_LEN = AU_TABLE.length;
-    var AU_MIN_ICAO = 0x7C0000;
-    var AU_MAX_ICAO = AU_MIN_ICAO + Math.pow(AU_TABLE_LEN, 3) - 1;
+  const MAX_CH_ICAO_ALPHA = MIN_CH_ICAO + (26*26*26);
 
-    if (icao < AU_MIN_ICAO) return null;
-    if (icao > AU_MAX_ICAO) return null;
+  // Tail letters are simple, for alphabetic range.
+  const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    icao -= AU_MIN_ICAO;
-    return 'VH-' +
-        AU_TABLE[Math.floor(icao / Math.pow(AU_TABLE_LEN, 2))] +
-        AU_TABLE[Math.floor(icao / AU_TABLE_LEN) % AU_TABLE_LEN] +
-        AU_TABLE[icao % AU_TABLE_LEN];
+  // Range check, please.
+  if (icao < MIN_CH_ICAO) return null;
+  if (icao > MAX_CH_ICAO) return null;
+
+  if (icao < MAX_CH_ICAO_ALPHA) {
+    // Calculate where we are within the alpha block.
+    var offset = icao - MIN_CH_ICAO;
+
+    return 'HB-' + CHARSET[Math.floor(offset / (26 * 26))] +
+        CHARSET[Math.floor((offset / 26) % 26)] +
+        CHARSET[offset % 26];
+  }
+
+  return null;
 }
 
 /** Convert an ICAO address to a German tail number.
@@ -251,75 +244,15 @@ TailNumber.FromDEICAO = function(icao) {
     }
 }
 
-/** Convert an ICAO address offset to a tail number.
- *
- * For countries that use 5-bit packing.
- *
- * @param {Number} icao 24-bit address.
- * @param {String} Tail number prefix to prepend to the returned value.
- * @return {String||null}
- */
-TailNumber.FromOffset32 = function(offset, prefix) {
-  // Tail numbers are nice and simple. They have a predefined character set:
-  const CHARSET = '?ABCDEFGHIJKLMNOPQRSTUVWXYZ?????';
-
-  // The first digit is assigned on a 0x400 interval.
-  const FIRST_DIGIT_SCALE = 0x400;
-
-  // The second digit is assigned on an 0x20 interval.
-  const SECOND_DIGIT_SCALE = 0x20;
-
-  // And then the third digit is assiged within those 32 characters.
+TailNumber.FromDKICAO = function(icao) {
+	const MIN_DK_ICAO = 0x458000;
+	const MAX_DK_ICAO = 0x45FFFF;
 
   // Range check, please.
-  if (offset > (FIRST_DIGIT_SCALE * SECOND_DIGIT_SCALE)) return null;
+  if (icao < MIN_DK_ICAO) return null;
+  if (icao > MAX_DK_ICAO) return null;
 
-  return prefix + CHARSET[Math.floor(offset / FIRST_DIGIT_SCALE)] +
-      CHARSET[Math.floor((offset % FIRST_DIGIT_SCALE) / SECOND_DIGIT_SCALE)] +
-      CHARSET[offset % SECOND_DIGIT_SCALE];
-}
-
-/** Convert an ICAO address offset to a tail number.
- *
- * For countries that use tight packing of the latin alphabet (keyspace of
- * 26^3) for a three-character suffix.
- *
- * @param {Number} icao 24-bit address.
- * @param {String} Tail number prefix to prepend to the returned value.
- * @return {String||null}
- */
-TailNumber.FromOffset26 = function(offset, prefix) {
-  const MAX_ALPHA = (26*26*26);
-
-  // Finnish tail letters are simple, for alphabetic range.
-  const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-  // Range check, please.
-  if (offset < 0) return null;
-  if (offset >= MAX_ALPHA) return null;
-
-  return prefix + CHARSET[Math.floor(offset / (26 * 26))] +
-      CHARSET[Math.floor((offset / 26) % 26)] +
-      CHARSET[offset % 26];
-}
-
-/** Convert an ICAO address to a Belgian tail number.
- *
- * @param {Number} icao 24-bit address.
- * @return {String||null}
- */
-TailNumber.FromBEICAO = function(icao) {
-	const MIN_BE_ICAO = 0x448000;
-	const MAX_BE_ICAO = 0x44FFFF;
-
-  // Range check, please.
-  if (icao < MIN_BE_ICAO) return null;
-  if (icao > MAX_BE_ICAO) return null;
-
-  // Calculate where we are within the BE block.
-  var offset = icao - MIN_BE_ICAO;
-
-  return TailNumber.FromOffset32(offset, 'OO-');
+  return TailNumber.FromOffset32(icao - MIN_DK_ICAO, 'OY-');
 }
 
 /** Convert an ICAO address to a Finnish tail number.
@@ -363,53 +296,30 @@ TailNumber.FromFIICAO = function(icao) {
   return null;
 }
 
-/** Convert an ICAO address to a Swiss tail number.
+/** Decode a French tail number from an ICAO 24-bit address.
  *
- * @param {Number} icao 24-bit address.
- * @return {String||null}
+ * @param {Number} icao 24-bit address
  */
-TailNumber.FromCHICAO = function(icao) {
-	const MIN_CH_ICAO = 0x4B0000;
-	const MAX_CH_ICAO = 0x4B7FFF;
+TailNumber.FromFRICAO = function(icao) {
+    // French tail numbers use a sensible bitmasking strategy for 24-bit
+    // encoding; the bitfields are:
+    //                 1       2
+    // 0...,...8...,...6...,...4
+    // [ fr ][2][ 3 ][ 4 ][ 5 ]
 
-  const MAX_CH_ICAO_ALPHA = MIN_CH_ICAO + (26*26*26);
+    var FR_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ??????';
+    var FR_PREFIX = 'B?GHO???';
+    var FR_MIN_ICAO = 0x380000;
+    var FR_MAX_ICAO = 0x3A6739;
 
-  // Tail letters are simple, for alphabetic range.
-  const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (icao < FR_MIN_ICAO) return null;
+    if (icao > FR_MAX_ICAO) return null;
 
-  // Range check, please.
-  if (icao < MIN_CH_ICAO) return null;
-  if (icao > MAX_CH_ICAO) return null;
-
-  if (icao < MAX_CH_ICAO_ALPHA) {
-    // Calculate where we are within the alpha block.
-    var offset = icao - MIN_CH_ICAO;
-
-    return 'HB-' + CHARSET[Math.floor(offset / (26 * 26))] +
-        CHARSET[Math.floor((offset / 26) % 26)] +
-        CHARSET[offset % 26];
-  }
-
-  return null;
-}
-
-/** Convert an ICAO address to a Portugese tail number.
- *
- * @param {Number} icao 24-bit address.
- * @return {String||null}
- */
-TailNumber.FromPTICAO = function(icao) {
-	const MIN_PT_ICAO = 0x490000;
-	const MAX_PT_ICAO = 0x497FFF;
-
-  // Range check, please.
-  if (icao < MIN_PT_ICAO) return null;
-  if (icao > MAX_PT_ICAO) return null;
-
-  // Calculate where we are within the PT block.
-  var offset = icao - MIN_PT_ICAO;
-
-  return TailNumber.FromOffset32(offset, 'CS-');
+    var tail_number = 'F-' + FR_PREFIX[(icao >> 15) & 0xF] +
+        FR_TABLE[(icao >> 10) & 0x1F] +
+        FR_TABLE[(icao >> 5) & 0x1F] +
+        FR_TABLE[icao & 0x1F];
+    return tail_number;
 }
 
 /** Convert an ICAO address to a Greek tail number.
@@ -429,6 +339,25 @@ TailNumber.FromGRICAO = function(icao) {
   var offset = icao - MIN_GR_ICAO;
 
   return TailNumber.FromOffset32(offset, 'SX-');
+}
+
+/** Convert an ICAO address to a Portugese tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromPTICAO = function(icao) {
+	const MIN_PT_ICAO = 0x490000;
+	const MAX_PT_ICAO = 0x497FFF;
+
+  // Range check, please.
+  if (icao < MIN_PT_ICAO) return null;
+  if (icao > MAX_PT_ICAO) return null;
+
+  // Calculate where we are within the PT block.
+  var offset = icao - MIN_PT_ICAO;
+
+  return TailNumber.FromOffset32(offset, 'CS-');
 }
 
 /** Convert an ICAO address to a Romanian tail number.
@@ -476,6 +405,102 @@ TailNumber.FromRUICAO = function(icao) {
   return null;
 }
 
+TailNumber.FromTRICAO = function(icao) {
+	const MIN_TR_ICAO = 0x4B8000;
+	const MAX_TR_ICAO = 0x4BFFFF;
+
+  // Range check, please.
+  if (icao < MIN_TR_ICAO) return null;
+  if (icao > MAX_TR_ICAO) return null;
+
+  return TailNumber.FromOffset32(icao - MIN_TR_ICAO, 'TC-');
+}
+
+/** Decode a US tail number from an ICAO 24-bit address.
+ *
+ * @param {Number} icao  24-bit address
+ */
+TailNumber.FromUSICAO = function(icao) {
+    // US tail numbers are variable length, and encoded as a suffix to the
+    // standard country prefix (N). The first address of the US block is not
+    // valid, and only a subset of the US's ICAO addresses are coded according
+    // to this scheme.
+
+    var US_MIN_ICAO = 0xA00001;
+    var US_MAX_ICAO = 0xADF7C7;
+
+    // Character space for US tail numbers. The letters I and O are deliberately
+    // excluded to reduce confusion.
+    var US_TABLE_DIG1 = '123456789';
+    var US_TABLE_DIG2 = '0123456789';
+    var US_TABLE_ALPHA = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+
+    // Each first digit has this much key space.
+    var DIGIT_1 = 101711;
+    var DIGIT_2 = 10111;
+    var DIGIT_3 = 951;
+    var DIGIT_4 = US_TABLE_ALPHA.length + US_TABLE_DIG2.length + 1;
+
+    // Remainders of less than this specify a letter suffix.
+    var LAST_DIGIT = 601;
+
+    US_MAX_ICAO = US_MIN_ICAO + US_TABLE_DIG1.length * DIGIT_1 - 1;
+
+    if (icao < US_MIN_ICAO) return null;
+    if (icao > US_MAX_ICAO) return null;
+
+
+    var tail_number = 'N';
+    var trailing_letters = true;
+
+    // Extract the first letter.
+    icao -= US_MIN_ICAO;
+    tail_number += US_TABLE_DIG1[Math.floor(icao / DIGIT_1)];
+    icao %= DIGIT_1;
+
+    // Extract the second digit.
+    if (icao >= LAST_DIGIT) {
+        tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_2)];
+        icao -= LAST_DIGIT;
+        icao %= DIGIT_2;
+    }
+
+    // Extract the third digit.
+    if (icao >= LAST_DIGIT) {
+        tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_3)];
+        icao -= LAST_DIGIT;
+        icao %= DIGIT_3;
+    }
+
+    // Extract the fourth digit. If present, the fifth digit may include either
+    // a letter or a number. The coding scheme needs this information later on.
+    if (icao >= LAST_DIGIT) {
+        trailing_letters = false;
+        tail_number += US_TABLE_DIG2[Math.floor((icao - LAST_DIGIT) / DIGIT_4)];
+        icao -= LAST_DIGIT;
+        icao %= DIGIT_4;
+    }
+
+    // If we have a digit in the fifth position, bail out without trying to find
+    // any tail letters.
+    if (!trailing_letters && icao > US_TABLE_ALPHA.length) {
+        tail_number += US_TABLE_DIG2[icao - (US_TABLE_ALPHA.length + 1)];
+        return tail_number;
+    }
+
+    if (trailing_letters && icao) {
+        icao -= 1;
+        tail_number += US_TABLE_ALPHA[Math.floor(icao / 25)];
+        icao %= 25;
+    }
+
+    if (icao) {
+        tail_number += US_TABLE_ALPHA[icao - 1];
+    }
+
+    return tail_number;
+}
+
 TailNumber.FromZAICAO = function(icao) {
 	const MIN_ZA_ICAO = 0x008000;
 	const MAX_ZA_ICAO = 0x00FFFF;
@@ -486,9 +511,6 @@ TailNumber.FromZAICAO = function(icao) {
 
   return TailNumber.FromOffset26(icao - 0x008011, 'ZS-');
 }
-
-// Possibilities: DK, TR, YU, RU
-// Done: AU, BE, CA, CH, DE, FI, FR, GR, PT, RO, US, ZA
 
 /** ICAO 24-bit Address-related functions.
  * @namespace
@@ -585,7 +607,7 @@ Address.PREFIXES = ([
   {prefix: '010001000', location_name: 'Austria', country_code: 'AT'},
   {prefix: '010001001', location_name: 'Belgium', country_code: 'BE', tail_algorithm: TailNumber.FromBEICAO},
   {prefix: '010001010', location_name: 'Bulgaria', country_code: 'BG'},
-  {prefix: '010001011', location_name: 'Denmark', country_code: 'DK'},
+  {prefix: '010001011', location_name: 'Denmark', country_code: 'DK', tail_algorithm: TailNumber.FromDKICAO},
   {prefix: '010001100', location_name: 'Finland', country_code: 'FI', tail_algorithm: TailNumber.FromFIICAO},
   {prefix: '010001101', location_name: 'Greece', country_code: 'GR', tail_algorithm: TailNumber.FromGRICAO},
   {prefix: '010001110', location_name: 'Hungary', country_code: 'HU'},
@@ -597,7 +619,7 @@ Address.PREFIXES = ([
   {prefix: '010010100', location_name: 'Romania', country_code: 'RO', tail_algorithm: TailNumber.FromROICAO},
   {prefix: '010010101', location_name: 'Sweden', country_code: 'SE'},
   {prefix: '010010110', location_name: 'Switzerland', country_code: 'CH', tail_algorithm: TailNumber.FromCHICAO},
-  {prefix: '010010111', location_name: 'Turkey', country_code: 'TR'},
+  {prefix: '010010111', location_name: 'Turkey', country_code: 'TR', tail_algorithm: TailNumber.FromTRICAO},
   {prefix: '010011000', location_name: 'Yugoslavia', country_code: 'YU'},
   {prefix: '01001100100000', location_name: 'Cyprus', country_code: 'CY'},
   {prefix: '010011001010', location_name: 'Ireland', country_code: 'IE'},
