@@ -519,6 +519,20 @@ TailNumber.FromRUICAO = function(icao) {
   return null;
 }
 
+TailNumber.FromSEICAO = function(icao) {
+	const MIN_SE_ICAO = 0x4A8000;
+	const MAX_SE_ICAO = 0x4AFFFF;
+
+  // Range check, please.
+  if (icao < MIN_SE_ICAO) return null;
+  if (icao > MAX_SE_ICAO) return null;
+
+  // Calculate where we are within the SE block.
+  var offset = icao - MIN_SE_ICAO;
+
+  return TailNumber.FromOffset32(offset, 'SE-');
+}
+
 TailNumber.FromTHICAO = function(icao) {
 	const MIN_TH_ICAO = 0x880000;
 	const MAX_TH_ICAO = 0x887FFF;
@@ -742,7 +756,7 @@ Address.PREFIXES = ([
   {prefix: '010010010', location_name: 'Portugal', country_code: 'PT', tail_algorithm: TailNumber.FromPTICAO},
   {prefix: '010010011', location_name: 'Czech Republic', country_code: 'CZ'},
   {prefix: '010010100', location_name: 'Romania', country_code: 'RO', tail_algorithm: TailNumber.FromROICAO},
-  {prefix: '010010101', location_name: 'Sweden', country_code: 'SE'},
+  {prefix: '010010101', location_name: 'Sweden', country_code: 'SE', tail_algorithm: TailNumber.FromSEICAO},
   {prefix: '010010110', location_name: 'Switzerland', country_code: 'CH', tail_algorithm: TailNumber.FromCHICAO},
   {prefix: '010010111', location_name: 'Turkey', country_code: 'TR', tail_algorithm: TailNumber.FromTRICAO},
   {prefix: '010011000', location_name: 'Yugoslavia', country_code: 'YU'},
