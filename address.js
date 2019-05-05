@@ -360,6 +360,59 @@ TailNumber.FromHUICAO = function(icao) {
   return TailNumber.FromOffset26(offset, 'HA-');
 }
 
+TailNumber.FromJPICAO = function(icao) {
+	const MIN_JP_ICAO = 0x840000;
+	const MAX_JP_ICAO = 0x87FFFF;
+
+  // Two character sets are used; numbers cannot follow letters in a tail number
+  const ALNUM = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const AL = ALNUM.substr(10);
+
+  // Tail number structure:
+  // JA
+  //   [0-9]                    229840 tails
+  //        [0-9]                 9160 tails
+  //             [0-9]             340 tails
+  //                  [0-9A-Z]      34 tails
+  //             [A-Z]             576 tails
+  //                  [A-Z]         24 tails
+  //        [A-Z]                13824 tails
+  //             [A-Z]             576 tails
+  //                  [A-Z]         24 tails
+
+	const ASSIGNED = 229840;
+
+  // Range check, please.
+  if (icao < MIN_JP_ICAO) return null;
+  if (icao > MAX_JP_ICAO) return null;
+  if (icao >= (MAX_JP_ICAO + ASSIGNED)) return null;
+
+  // Japanese tail numbers are arranged as JA0000, JA000X, JA00XX.
+  // The ICAO24 packing allows for JA0XXX too, but this has not been observed.
+
+	// Get the first character, which must be a number.
+  var offset = icao - MIN_JP_ICAO;
+  const digit0 = Math.floor(offset / 22984);
+	offset %= 22984;
+
+	// Get the second character, which may be alphanumeric.
+	const digit1num = offset < 9160;
+  const digit1 = ALNUM[digit1num ? Math.floor(offset / 916) : Math.floor(10 + (offset - 9160) / 576)];
+	offset -= digit1num ? 0 : 9160;
+	offset %= digit1num ? 916 : 576;
+
+	// Get the third character.
+	const digit2num = digit1num ? (offset < 340) : false;
+	const digit2 = (digit1num ? ALNUM : AL)[Math.floor(digit2num ? (offset / 34) : (10 + ((offset - 340)/ 24)))];
+	offset -= digit2num ? 0 : 340;
+	offset %= digit2num ? 34 : 24;
+
+	// Get the final character, based on the previous character type.
+	const digit3 = (digit2num ? ALNUM : AL)[offset];
+
+  return 'JA'.concat(digit0).concat(digit1).concat(digit2).concat(digit3);
+}
+
 TailNumber.FromKPICAO = function(icao) {
 	const MIN_KP_ICAO = 0x720000;
 	const MAX_KP_ICAO = 0x727FFF;
@@ -752,7 +805,7 @@ Address.PREFIXES = ([
   {prefix: '011110', location_name: 'China', country_code: 'CN'},
   {prefix: '011111', location_name: 'Australia', country_code: 'AU', tail_algorithm: TailNumber.FromAUICAO},
   {prefix: '100000', location_name: 'India', country_code: 'IN'},
-  {prefix: '100001', location_name: 'Japan', country_code: 'JP'},
+  {prefix: '100001', location_name: 'Japan', country_code: 'JP', tail_algorithm: TailNumber.FromJPICAO},
   {prefix: '100010000', location_name: 'Thailand', country_code: 'TH', tail_algorithm: TailNumber.FromTHICAO},
   {prefix: '100010001', location_name: 'Viet Nam', country_code: 'VN'},
   {prefix: '100010010000', location_name: 'Yemen', country_code: 'YE'},
