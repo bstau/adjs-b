@@ -360,6 +360,23 @@ TailNumber.FromHUICAO = function(icao) {
   return TailNumber.FromOffset26(offset, 'HA-');
 }
 
+TailNumber.FromKPICAO = function(icao) {
+	const MIN_KP_ICAO = 0x720000;
+	const MAX_KP_ICAO = 0x727FFF;
+
+  // Range check, please.
+  if (icao < MIN_KP_ICAO) return null;
+  if (icao > MAX_KP_ICAO) return null;
+
+  // North Korea has a simple mapping for civilian aircraft; P500 == 0x727700
+  // and it goes up from there to P999.
+  if ((icao >= 0x727700) && (icao - 0x727700) <= 999) {
+    return 'P-' + (icao - 0x727530).toString(10);
+  }
+
+  return null;
+}
+
 TailNumber.FromKRICAO = function(icao) {
 	const MIN_KR_ICAO = 0x718000;
 	const MAX_KR_ICAO = 0x71FFFF;
@@ -720,7 +737,7 @@ Address.PREFIXES = ([
   {prefix: '011100001110', location_name: 'Cambodia', country_code: 'KH'},
   {prefix: '011100010', location_name: 'Saudi Arabia', country_code: 'SA'},
   {prefix: '011100011', location_name: 'Republic of Korea', country_code: 'KR', tail_algorithm: TailNumber.FromKRICAO},
-  {prefix: '011100100', location_name: 'Democratic People\'s Republic of Korea', country_code: 'KP'},
+  {prefix: '011100100', location_name: 'Democratic People\'s Republic of Korea', country_code: 'KP', tail_algorithm: TailNumber.FromKPICAO},
   {prefix: '011100101', location_name: 'Iraq', country_code: 'IQ'},
   {prefix: '011100110', location_name: 'Iran, Islamic Republic of', country_code: 'IR'},
   {prefix: '011100111', location_name: 'Israel', country_code: 'IL'},

@@ -168,6 +168,12 @@ const EXPECTED_TAIL_NUMBERS = [
     // Ultralights (HA-XXXX) are not issued in order.
     // Gliders (HA-1111) are not issued in order or in the HU block.
 
+    {icao: 0x727761, country: 'KP', tail_number: 'P-561'},
+    {icao: 0x7277A8, country: 'KP', tail_number: 'P-632'},
+    {icao: 0x7277A9, country: 'KP', tail_number: 'P-633'},
+    {icao: 0x7277CF, country: 'KP', tail_number: 'P-671'},
+    {icao: 0x7277D0, country: 'KP', tail_number: 'P-672'},
+
     {icao: 0x718971, country: 'KR', tail_number: 'HL1171'},
     {icao: 0x718A23, country: 'KR', tail_number: 'HL1223'},
     {icao: 0x71A920, country: 'KR', tail_number: 'HL5120'},
