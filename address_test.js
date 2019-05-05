@@ -230,6 +230,11 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x4AC9E3, country: 'SE', tail_number: 'SE-ROC'},
     {icao: 0x4AE9F4, country: 'SE', tail_number: 'SE-ZOT'},
 
+    {icao: 0x76A056, country: 'SG', tail_number: '9V-HBV'},
+    {icao: 0x76CD01, country: 'SG', tail_number: '9V-SHA'},
+    {icao: 0x76CD66, country: 'SG', tail_number: '9V-SKF'},
+    {icao: 0x76E4CC, country: 'SG', tail_number: '9V-YFL'},
+
     {icao: 0x880422, country: 'TH', tail_number: 'HS-AAB'},
     {icao: 0x881E88, country: 'TH', tail_number: 'HS-GTH'},
     {icao: 0x885041, country: 'TH', tail_number: 'HS-TBA'},

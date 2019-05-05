@@ -533,6 +533,17 @@ TailNumber.FromSEICAO = function(icao) {
   return TailNumber.FromOffset32(offset, 'SE-');
 }
 
+TailNumber.FromSGICAO = function(icao) {
+	const MIN_SG_ICAO = 0x768000;
+	const MAX_SG_ICAO = 0x76FFFF;
+
+  // Range check, please.
+  if (icao < MIN_SG_ICAO) return null;
+  if (icao > MAX_SG_ICAO) return null;
+
+  return TailNumber.FromOffset32(icao - MIN_SG_ICAO, '9V-');
+}
+
 TailNumber.FromTHICAO = function(icao) {
 	const MIN_TH_ICAO = 0x880000;
 	const MAX_TH_ICAO = 0x887FFF;
@@ -813,7 +824,7 @@ Address.PREFIXES = ([
   {prefix: '011101010', location_name: 'Malaysia', country_code: 'MY'},
   {prefix: '011101011', location_name: 'Philippines', country_code: 'PH'},
   {prefix: '011101100', location_name: 'Pakistan', country_code: 'PK'},
-  {prefix: '011101101', location_name: 'Singapore', country_code: 'SG'},
+  {prefix: '011101101', location_name: 'Singapore', country_code: 'SG', tail_algorithm: TailNumber.FromSGICAO},
   {prefix: '011101110', location_name: 'Sri Lanka', country_code: 'LK'},
   {prefix: '011101111', location_name: 'Syrian Arab Republic', country_code: 'SY'},
   {prefix: '011110', location_name: 'China', country_code: 'CN'},
