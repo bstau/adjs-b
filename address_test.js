@@ -180,6 +180,12 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x14A558, country: 'RU', tail_number: 'RA-42328'},
     {icao: 0x157707, country: 'RU', tail_number: 'RA-96007'},
 
+    {icao: 0x880422, country: 'TH', tail_number: 'HS-AAB'},
+    {icao: 0x881E88, country: 'TH', tail_number: 'HS-GTH'},
+    {icao: 0x885041, country: 'TH', tail_number: 'HS-TBA'},
+    {icao: 0x885108, country: 'TH', tail_number: 'HS-THH'},
+    {icao: 0x886042, country: 'TH', tail_number: 'HS-XBB'},
+
     {icao: 0x4B8421, country: 'TR', tail_number: 'TC-AAA'},
     {icao: 0x4B9902, country: 'TR', tail_number: 'TC-FHB'},
     {icao: 0x4BA4A8, country: 'TR', tail_number: 'TC-IEH'},

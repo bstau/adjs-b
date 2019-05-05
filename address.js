@@ -424,6 +424,17 @@ TailNumber.FromRUICAO = function(icao) {
   return null;
 }
 
+TailNumber.FromTHICAO = function(icao) {
+	const MIN_TH_ICAO = 0x880000;
+	const MAX_TH_ICAO = 0x887FFF;
+
+  // Range check, please.
+  if (icao < MIN_TH_ICAO) return null;
+  if (icao > MAX_TH_ICAO) return null;
+
+  return TailNumber.FromOffset32(icao - MIN_TH_ICAO, 'HS-');
+}
+
 TailNumber.FromTRICAO = function(icao) {
 	const MIN_TR_ICAO = 0x4B8000;
 	const MAX_TR_ICAO = 0x4BFFFF;
@@ -700,7 +711,7 @@ Address.PREFIXES = ([
   {prefix: '011111', location_name: 'Australia', country_code: 'AU', tail_algorithm: TailNumber.FromAUICAO},
   {prefix: '100000', location_name: 'India', country_code: 'IN'},
   {prefix: '100001', location_name: 'Japan', country_code: 'JP'},
-  {prefix: '100010000', location_name: 'Thailand', country_code: 'TH'},
+  {prefix: '100010000', location_name: 'Thailand', country_code: 'TH', tail_algorithm: TailNumber.FromTHICAO},
   {prefix: '100010001', location_name: 'Viet Nam', country_code: 'VN'},
   {prefix: '100010010000', location_name: 'Yemen', country_code: 'YE'},
   {prefix: '100010010100', location_name: 'Bahrain', country_code: 'BH'},
