@@ -168,6 +168,22 @@ const EXPECTED_TAIL_NUMBERS = [
     // Ultralights (HA-XXXX) are not issued in order.
     // Gliders (HA-1111) are not issued in order or in the HU block.
 
+    {icao: 0x718971, country: 'KR', tail_number: 'HL1171'},
+    {icao: 0x718A23, country: 'KR', tail_number: 'HL1223'},
+    {icao: 0x71A920, country: 'KR', tail_number: 'HL5120'},
+    {icao: 0x71BA00, country: 'KR', tail_number: 'HL7200'},
+    {icao: 0x71BA01, country: 'KR', tail_number: 'HL7201'},
+    {icao: 0x71BA13, country: 'KR', tail_number: 'HL7213'},
+    {icao: 0x71BB01, country: 'KR', tail_number: 'HL7301'},
+    {icao: 0x71BC19, country: 'KR', tail_number: 'HL7419'},
+    {icao: 0x71BF10, country: 'KR', tail_number: 'HL7710'},
+    {icao: 0x71C039, country: 'KR', tail_number: 'HL8039'},
+    {icao: 0x71C363, country: 'KR', tail_number: 'HL8363'},
+    {icao: 0x71C027, country: 'KR', tail_number: 'HL8027'},
+    {icao: 0x71C260, country: 'KR', tail_number: 'HL8260'},
+    {icao: 0x71CE40, country: 'KR', tail_number: 'HL9640'},
+
+
     {icao: 0x49106C, country: 'PT', tail_number: 'CS-DCL'},
     {icao: 0x495285, country: 'PT', tail_number: 'CS-TTE'},
     {icao: 0x4952C2, country: 'PT', tail_number: 'CS-TVB'},

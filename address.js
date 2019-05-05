@@ -360,6 +360,31 @@ TailNumber.FromHUICAO = function(icao) {
   return TailNumber.FromOffset26(offset, 'HA-');
 }
 
+TailNumber.FromKRICAO = function(icao) {
+	const MIN_KR_ICAO = 0x718000;
+	const MAX_KR_ICAO = 0x71FFFF;
+
+  // Range check, please.
+  if (icao < MIN_KR_ICAO) return null;
+  if (icao > MAX_KR_ICAO) return null;
+
+  // Korea has an interesting scheme where they treat the ICAO code as BCD.
+  // A modified BCD, at least. Gotta keep Mode S addressing interesting.
+  if (icao <= 0x71CE99) {
+    if ((icao & 0x0F) > 0x9) return null;
+    if ((icao & 0xF0) > 0x90) return null;
+
+    var digit0 = (icao & 0x007800) >> 11;
+    var digit1 = (icao & 0x000700) >> 8;
+    var digit2 = (icao & 0x0000f0) >> 4;
+    var digit3 = (icao & 0x00000f);
+
+    return 'HL' + digit0.toString(10) + digit1.toString(10) + digit2.toString(10) + digit3.toString(10);
+  }
+
+  return null;
+}
+
 /** Convert an ICAO address to a Portugese tail number.
  *
  * @param {Number} icao 24-bit address.
@@ -694,7 +719,7 @@ Address.PREFIXES = ([
   {prefix: '01110000110000', location_name: 'Oman', country_code: 'OM'},
   {prefix: '011100001110', location_name: 'Cambodia', country_code: 'KH'},
   {prefix: '011100010', location_name: 'Saudi Arabia', country_code: 'SA'},
-  {prefix: '011100011', location_name: 'Republic of Korea', country_code: 'KR'},
+  {prefix: '011100011', location_name: 'Republic of Korea', country_code: 'KR', tail_algorithm: TailNumber.FromKRICAO},
   {prefix: '011100100', location_name: 'Democratic People\'s Republic of Korea', country_code: 'KP'},
   {prefix: '011100101', location_name: 'Iraq', country_code: 'IQ'},
   {prefix: '011100110', location_name: 'Iran, Islamic Republic of', country_code: 'IR'},
