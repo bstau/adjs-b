@@ -289,6 +289,7 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x345115, country: 'ES'},
     {icao: 0x8A052E, country: 'ID'},
     {icao: 0x0d0380, country: 'MX'},
+    {icao: 0x750476, country: 'MY'},
     {icao: 0x4787B2, country: 'NO'},
     {icao: 0x47C5C9, country: 'NO'},
     {icao: 0x484006, country: 'NL'},
