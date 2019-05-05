@@ -297,6 +297,7 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x75847C, country: 'PH'},
     {icao: 0x89901A, country: 'TW'},
     {icao: 0x50836C, country: 'UA'},
+    {icao: 0x88801A, country: 'VN'},
 ];
 
 testThat('Determines correct country code from ICAO addresses', EXPECTED_TAIL_NUMBERS.every(
