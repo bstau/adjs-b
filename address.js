@@ -341,6 +341,25 @@ TailNumber.FromGRICAO = function(icao) {
   return TailNumber.FromOffset32(offset, 'SX-');
 }
 
+/** Convert an ICAO address to a Greek tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromHUICAO = function(icao) {
+	const MIN_HU_ICAO = 0x470000;
+	const MAX_HU_ICAO = 0x477FFF;
+
+  // Range check, please.
+  if (icao < MIN_HU_ICAO) return null;
+  if (icao > MAX_HU_ICAO) return null;
+
+  // Calculate where we are within the HU block.
+  var offset = icao - MIN_HU_ICAO;
+
+  return TailNumber.FromOffset26(offset, 'HA-');
+}
+
 /** Convert an ICAO address to a Portugese tail number.
  *
  * @param {Number} icao 24-bit address.
@@ -610,7 +629,7 @@ Address.PREFIXES = ([
   {prefix: '010001011', location_name: 'Denmark', country_code: 'DK', tail_algorithm: TailNumber.FromDKICAO},
   {prefix: '010001100', location_name: 'Finland', country_code: 'FI', tail_algorithm: TailNumber.FromFIICAO},
   {prefix: '010001101', location_name: 'Greece', country_code: 'GR', tail_algorithm: TailNumber.FromGRICAO},
-  {prefix: '010001110', location_name: 'Hungary', country_code: 'HU'},
+  {prefix: '010001110', location_name: 'Hungary', country_code: 'HU', tail_algorithm: TailNumber.FromHUICAO},
   {prefix: '010001111', location_name: 'Norway', country_code: 'NO'},
   {prefix: '010010000', location_name: 'Netherlands, Kingdom of the', country_code: 'NL'},
   {prefix: '010010001', location_name: 'Poland', country_code: 'PL'},

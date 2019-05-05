@@ -161,6 +161,13 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x4690EE, country: 'GR', tail_number: 'SX-DGN'},
     {icao: 0x46B428, country: 'GR', tail_number: 'SX-MAH'},
 
+    {icao: 0x47001D, country: 'HU', tail_number: 'HA-ABD'},
+    {icao: 0x471F7E, country: 'HU', tail_number: 'HA-LYC'},
+    {icao: 0x473FA7, country: 'HU', tail_number: 'HA-YCT'},
+    {icao: 0x473FB8, country: 'HU', tail_number: 'HA-YDK'},
+    // Ultralights (HA-XXXX) are not issued in order.
+    // Gliders (HA-1111) are not issued in order or in the HU block.
+
     {icao: 0x49106C, country: 'PT', tail_number: 'CS-DCL'},
     {icao: 0x495285, country: 'PT', tail_number: 'CS-TTE'},
     {icao: 0x4952C2, country: 'PT', tail_number: 'CS-TVB'},
