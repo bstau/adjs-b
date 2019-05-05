@@ -34,6 +34,7 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x4B02CE, country: 'CH', tail_number: 'HB-BBQ'},
     {icao: 0x4B02DE, country: 'CH', tail_number: 'HB-BCG'},
     {icao: 0x4B17F9, country: 'CH', tail_number: 'HB-JCB'},
+    {icao: 0x4B18FF, country: 'CH', tail_number: 'HB-JMD'},
     {icao: 0x4B445C, country: 'CH', tail_number: 'HB-ZXC'},
     {icao: 0x4B448D, country: 'CH', tail_number: 'HB-ZYZ'},
 
@@ -183,6 +184,7 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x71BB01, country: 'KR', tail_number: 'HL7301'},
     {icao: 0x71BC19, country: 'KR', tail_number: 'HL7419'},
     {icao: 0x71BF10, country: 'KR', tail_number: 'HL7710'},
+    {icao: 0x71BF32, country: 'KR', tail_number: 'HL7732'},
     {icao: 0x71C039, country: 'KR', tail_number: 'HL8039'},
     {icao: 0x71C363, country: 'KR', tail_number: 'HL8363'},
     {icao: 0x71C027, country: 'KR', tail_number: 'HL8027'},
@@ -278,19 +280,15 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x404001, country: 'GB'},
 
     // Other countries with unpredictable ICAO24 mappings.
+    {icao: 0x7800EB, country: 'CN'},
+    {icao: 0x345115, country: 'ES'},
     {icao: 0x0d0380, country: 'MX'},
     {icao: 0x4787B2, country: 'NO'},
-    {icao: 0x48456F, country: 'NL'},
-
-    // A few common planes spotted in the skies over SFO.
-    {icao: 0x71BF32, country: 'KR'},
-    {icao: 0x7800EB, country: 'CN'},
-    {icao: 0x89901A, country: 'TW'},
-    {icao: 0x484006, country: 'NL'},
     {icao: 0x47C5C9, country: 'NO'},
-    {icao: 0x4B18FF, country: 'CH'},
-    {icao: 0x345115, country: 'ES'},
-
+    {icao: 0x484006, country: 'NL'},
+    {icao: 0x48456F, country: 'NL'},
+    {icao: 0x89901A, country: 'TW'},
+    {icao: 0x50836C, country: 'UK'},
 ];
 
 testThat('Determines correct country code from ICAO addresses', EXPECTED_TAIL_NUMBERS.every(
