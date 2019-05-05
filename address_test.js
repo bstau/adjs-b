@@ -282,6 +282,7 @@ const EXPECTED_TAIL_NUMBERS = [
     // Other countries with unpredictable ICAO24 mappings.
     {icao: 0x7800EB, country: 'CN'},
     {icao: 0x345115, country: 'ES'},
+    {icao: 0x8A052E, country: 'ID'},
     {icao: 0x0d0380, country: 'MX'},
     {icao: 0x4787B2, country: 'NO'},
     {icao: 0x47C5C9, country: 'NO'},
