@@ -279,6 +279,7 @@ const EXPECTED_TAIL_NUMBERS = [
 
     // Other countries with unpredictable ICAO24 mappings.
     {icao: 0x0d0380, country: 'MX'},
+    {icao: 0x4787B2, country: 'NO'},
 
     // A few common planes spotted in the skies over SFO.
     {icao: 0x71BF32, country: 'KR'},
