@@ -184,6 +184,23 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x4A0833, country: 'RO', tail_number: 'YR-BAS'},
     {icao: 0x4A08E6, country: 'RO', tail_number: 'YR-BGF'},
 
+    {icao: 0x1427DB, country: 'RU', tail_number: 'RA-10203'},
+    {icao: 0x147537, country: 'RU', tail_number: 'RA-30007'},
+    {icao: 0x14A558, country: 'RU', tail_number: 'RA-42328'},
+    {icao: 0x157707, country: 'RU', tail_number: 'RA-96007'},
+
+    {icao: 0x00801B, country: 'ZA', tail_number: 'ZS-AAK'},
+    {icao: 0x00801C, country: 'ZA', tail_number: 'ZS-AAL'},
+    {icao: 0x00801D, country: 'ZA', tail_number: 'ZS-AAM'},
+    {icao: 0x008079, country: 'ZA', tail_number: 'ZS-AEA'},
+    {icao: 0x0082C0, country: 'ZA', tail_number: 'ZS-BAL'},
+    {icao: 0x0093C0, country: 'ZA', tail_number: 'ZS-HLV'},
+    {icao: 0x00C451, country: 'ZA', tail_number: 'ZS-ZWA'},
+    {icao: 0x00C457, country: 'ZA', tail_number: 'ZS-ZWG'},
+
+    /* Assigment of ICAO24 to ZT- and ZU- tail numbers in South Africa does not
+     * appear to follow any predictable order. */
+
     // The UK does not have predictable tail number to ICAO mappings.
     {icao: 0x404000, country: 'GB'},
     {icao: 0x404001, country: 'GB'},

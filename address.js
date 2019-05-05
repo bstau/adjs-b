@@ -251,11 +251,12 @@ TailNumber.FromDEICAO = function(icao) {
     }
 }
 
-/** Convert an ICAO address offset to a tail number suffix.
+/** Convert an ICAO address offset to a tail number.
  *
  * For countries that use 5-bit packing.
-
+ *
  * @param {Number} icao 24-bit address.
+ * @param {String} Tail number prefix to prepend to the returned value.
  * @return {String||null}
  */
 TailNumber.FromOffset32 = function(offset, prefix) {
@@ -276,6 +277,30 @@ TailNumber.FromOffset32 = function(offset, prefix) {
   return prefix + CHARSET[Math.floor(offset / FIRST_DIGIT_SCALE)] +
       CHARSET[Math.floor((offset % FIRST_DIGIT_SCALE) / SECOND_DIGIT_SCALE)] +
       CHARSET[offset % SECOND_DIGIT_SCALE];
+}
+
+/** Convert an ICAO address offset to a tail number.
+ *
+ * For countries that use tight packing of the latin alphabet (keyspace of
+ * 26^3) for a three-character suffix.
+ *
+ * @param {Number} icao 24-bit address.
+ * @param {String} Tail number prefix to prepend to the returned value.
+ * @return {String||null}
+ */
+TailNumber.FromOffset26 = function(offset, prefix) {
+  const MAX_ALPHA = (26*26*26);
+
+  // Finnish tail letters are simple, for alphabetic range.
+  const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  // Range check, please.
+  if (offset < 0) return null;
+  if (offset >= MAX_ALPHA) return null;
+
+  return prefix + CHARSET[Math.floor(offset / (26 * 26))] +
+      CHARSET[Math.floor((offset / 26) % 26)] +
+      CHARSET[offset % 26];
 }
 
 /** Convert an ICAO address to a Belgian tail number.
@@ -425,8 +450,45 @@ TailNumber.FromROICAO = function(icao) {
   return TailNumber.FromOffset32(offset, 'YR-');
 }
 
-// Possibilities: DK, TR, YU, RU, ZA
-// Done: AU, CA, US, FR, DE, BE, FI, PT, CH, GR, RO
+/** Convert an ICAO address to a Finnish tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromRUICAO = function(icao) {
+	const MIN_RU_ICAO = 0x140000;
+	const MAX_RU_ICAO = 0x157FFF;
+
+  // totally a guess; only observed up to RA-96022
+  const MAX_RU_ICAO_NUM = MIN_RU_ICAO + 100000;
+
+  // Range check, please.
+  if (icao < MIN_RU_ICAO) return null;
+  if (icao > MAX_RU_ICAO) return null;
+
+  if (icao < MAX_RU_ICAO_NUM) {
+    // Calculate where we are within the alpha block.
+    var offset = icao - MIN_RU_ICAO;
+
+    return 'RA-' + offset.toString(10);
+  }
+
+  return null;
+}
+
+TailNumber.FromZAICAO = function(icao) {
+	const MIN_ZA_ICAO = 0x008000;
+	const MAX_ZA_ICAO = 0x00FFFF;
+
+  // Range check, please.
+  if (icao < MIN_ZA_ICAO) return null;
+  if (icao > MAX_ZA_ICAO) return null;
+
+  return TailNumber.FromOffset26(icao - 0x008011, 'ZS-');
+}
+
+// Possibilities: DK, TR, YU, RU
+// Done: AU, BE, CA, CH, DE, FI, FR, GR, PT, RO, US, ZA
 
 /** ICAO 24-bit Address-related functions.
  * @namespace
@@ -437,7 +499,7 @@ Address.PREFIXES = ([
   {prefix: '000000000000000000000000', location_name: 'INVALID', country_code: null},
   {prefix: '00000000010000', location_name: 'Zimbabwe', country_code: 'ZW'},
   {prefix: '000000000110', location_name: 'Mozambique', country_code: 'MZ'},
-  {prefix: '000000001', location_name: 'South Africa', country_code: 'ZA'},
+  {prefix: '000000001', location_name: 'South Africa', country_code: 'ZA', tail_algorithm: TailNumber.FromZAICAO},
   {prefix: '000000010', location_name: 'Egypt', country_code: 'EG'},
   {prefix: '000000011', location_name: 'Libyan Arab Jamahiriya', country_code: 'LY'},
   {prefix: '000000100', location_name: 'Morocco', country_code: 'MA'},
@@ -510,7 +572,7 @@ Address.PREFIXES = ([
   {prefix: '00001100110000', location_name: 'Grenada', country_code: 'GD'},
   {prefix: '000011010', location_name: 'Mexico', country_code: 'MX'},
   {prefix: '000011011', location_name: 'Venezuela', country_code: 'VE'},
-  {prefix: '0001', location_name: 'Russian Federation', country_code: 'RU'},
+  {prefix: '0001', location_name: 'Russian Federation', country_code: 'RU', tail_algorithm: TailNumber.FromRUICAO},
   {prefix: '00100000000100', location_name: 'Namibia', country_code: 'NA'},
   {prefix: '00100000001000', location_name: 'Eritrea', country_code: 'ER'},
   {prefix: '00100', location_name: 'AFI', country_code: null},
