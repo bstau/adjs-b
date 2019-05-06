@@ -5,6 +5,37 @@ var TailNumber = {};
 
 /** Convert an ICAO address offset to a tail number.
  *
+ * For countries that use 6-bit packing.
+ *
+ * @param {Number} icao 24-bit address.
+ * @param {String} Tail number prefix to prepend to the returned value.
+ * @return {String||null}
+ */
+TailNumber.FromOffset64 = function(offset, prefix) {
+  // Tail numbers are nice and simple. They have a predefined character set:
+  const CHARSET = '?ABCDEFGHIJKLMNOPQRSTUVWXYZ?????????????????????????????????????';
+
+  // The first digit is assigned on a 0x400 interval.
+  const FIRST_DIGIT_SCALE = 0x1000;
+
+  // The second digit is assigned on an 0x20 interval.
+  const SECOND_DIGIT_SCALE = 0x40;
+
+  // And then the third digit is assiged within those 64 characters.
+
+  // Range check, please.
+  if (offset > (FIRST_DIGIT_SCALE * SECOND_DIGIT_SCALE)) return null;
+
+  const tail = prefix + CHARSET[Math.floor(offset / FIRST_DIGIT_SCALE)] +
+      CHARSET[Math.floor((offset % FIRST_DIGIT_SCALE) / SECOND_DIGIT_SCALE)] +
+      CHARSET[offset % SECOND_DIGIT_SCALE];
+
+  if (tail.indexOf('?') >= 0) return null;
+  return tail;
+}
+
+/** Convert an ICAO address offset to a tail number.
+ *
  * For countries that use 5-bit packing.
  *
  * @param {Number} icao 24-bit address.
@@ -56,6 +87,25 @@ TailNumber.FromOffset26 = function(offset, prefix) {
   return prefix + CHARSET[Math.floor(offset / (26 * 26))] +
       CHARSET[Math.floor((offset / 26) % 26)] +
       CHARSET[offset % 26];
+}
+
+/** Convert an ICAO address to a Argentinian tail number.
+ *
+ * @param {Number} icao 24-bit address.
+ * @return {String||null}
+ */
+TailNumber.FromARICAO = function(icao) {
+  const MIN_AR_ICAO = 0xE00000;
+  const MAX_AR_ICAO = 0xE3FFFF;
+
+  // Range check, please.
+  if (icao < MIN_AR_ICAO) return null;
+  if (icao > MAX_AR_ICAO) return null;
+
+  // Calculate where we are within the AR block.
+  var offset = icao - MIN_AR_ICAO;
+
+  return TailNumber.FromOffset64(offset, 'LV-');
 }
 
 /** Convert an ICAO address to an Australian tail number.
@@ -874,7 +924,7 @@ Address.PREFIXES = ([
   {prefix: '11001000111000', location_name: 'Kiribati', country_code: 'KI'},
   {prefix: '11001001000000', location_name: 'Vanuatu', country_code: 'VU'},
   {prefix: '1101', location_name: 'RESERVED', country_code: null},
-  {prefix: '111000', location_name: 'Argentina', country_code: 'AR'},
+  {prefix: '111000', location_name: 'Argentina', country_code: 'AR', tail_algorithm: TailNumber.FromARICAO},
   {prefix: '111001', location_name: 'Brazil', country_code: 'BR'},
   {prefix: '111010000000', location_name: 'Chile', country_code: 'CL'},
   {prefix: '111010000100', location_name: 'Ecuador', country_code: 'EC'},

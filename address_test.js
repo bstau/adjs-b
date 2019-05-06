@@ -1,4 +1,10 @@
 const EXPECTED_TAIL_NUMBERS = [
+    {icao: 0xE01484, country: 'AR', tail_number: 'LV-ARD'},
+    {icao: 0xE01486, country: 'AR', tail_number: 'LV-ARF'},
+    {icao: 0xE01644, country: 'AR', tail_number: 'LV-AYD'},
+    {icao: 0xE0D64C, country: 'AR', tail_number: 'LV-MYL'},
+    {icao: 0xE1A618, country: 'AR', tail_number: 'LV-ZXX'},
+
     {icao: 0x7C39B3, country: 'AU', tail_number: 'VH-LOL'},
     {icao: 0x7C4771, country: 'AU', tail_number: 'VH-OEB'},
 
