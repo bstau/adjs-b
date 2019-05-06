@@ -428,6 +428,20 @@ TailNumber.FromHUICAO = function(icao) {
   return TailNumber.FromOffset26(offset, 'HA-');
 }
 
+TailNumber.FromJOICAO = function(icao) {
+  const MIN_JO_ICAO = 0x740000;
+  const MAX_JO_ICAO = 0x747FFF;
+
+  // Range check, please.
+  if (icao < MIN_JO_ICAO) return null;
+  if (icao > MAX_JO_ICAO) return null;
+
+  // Calculate where we are within the JO block.
+  var offset = icao - MIN_JO_ICAO;
+
+  return TailNumber.FromOffset32(offset, 'JY-');
+}
+
 TailNumber.FromJPICAO = function(icao) {
   const MIN_JP_ICAO = 0x840000;
   const MAX_JP_ICAO = 0x87FFFF;
@@ -915,7 +929,7 @@ Address.PREFIXES = ([
   {prefix: '011100101', location_name: 'Iraq', country_code: 'IQ'},
   {prefix: '011100110', location_name: 'Iran, Islamic Republic of', country_code: 'IR'},
   {prefix: '011100111', location_name: 'Israel', country_code: 'IL'},
-  {prefix: '011101000', location_name: 'Jordan', country_code: 'JO'},
+  {prefix: '011101000', location_name: 'Jordan', country_code: 'JO', tail_algorithm: TailNumber.FromJOICAO},
   {prefix: '011101001', location_name: 'Lebanon', country_code: 'LB'},
   {prefix: '011101010', location_name: 'Malaysia', country_code: 'MY'},
   {prefix: '011101011', location_name: 'Philippines', country_code: 'PH'},
