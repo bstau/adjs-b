@@ -523,6 +523,20 @@ TailNumber.FromKRICAO = function(icao) {
   return null;
 }
 
+TailNumber.FromPKICAO = function(icao) {
+  const MIN_PK_ICAO = 0x760000;
+  const MAX_PK_ICAO = 0x767FFF;
+
+  // Range check, please.
+  if (icao < MIN_PK_ICAO) return null;
+  if (icao > MAX_PK_ICAO) return null;
+
+  // Calculate where we are within the PK block.
+  var offset = icao - MIN_PK_ICAO;
+
+  return TailNumber.FromOffset32(offset, 'AP-');
+}
+
 /** Convert an ICAO address to a Portugese tail number.
  *
  * @param {Number} icao 24-bit address.
@@ -905,7 +919,7 @@ Address.PREFIXES = ([
   {prefix: '011101001', location_name: 'Lebanon', country_code: 'LB'},
   {prefix: '011101010', location_name: 'Malaysia', country_code: 'MY'},
   {prefix: '011101011', location_name: 'Philippines', country_code: 'PH'},
-  {prefix: '011101100', location_name: 'Pakistan', country_code: 'PK'},
+  {prefix: '011101100', location_name: 'Pakistan', country_code: 'PK', tail_algorithm: TailNumber.FromPKICAO},
   {prefix: '011101101', location_name: 'Singapore', country_code: 'SG', tail_algorithm: TailNumber.FromSGICAO},
   {prefix: '011101110', location_name: 'Sri Lanka', country_code: 'LK'},
   {prefix: '011101111', location_name: 'Syrian Arab Republic', country_code: 'SY', tail_algorithm: TailNumber.FromSYICAO},

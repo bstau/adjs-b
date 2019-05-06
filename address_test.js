@@ -221,6 +221,8 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x8459D4, country: 'JP', tail_number: 'JA100C'},
     {icao: 0x87498A, country: 'JP', tail_number: 'JA999U'},
 
+    {icao: 0x7608F9, country: 'PK', tail_number: 'AP-BGY'},
+    {icao: 0x761C2B, country: 'PK', tail_number: 'AP-GAK'},
 
     {icao: 0x49106C, country: 'PT', tail_number: 'CS-DCL'},
     {icao: 0x495285, country: 'PT', tail_number: 'CS-TTE'},
