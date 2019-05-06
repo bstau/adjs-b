@@ -38,6 +38,10 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x4B445C, country: 'CH', tail_number: 'HB-ZXC'},
     {icao: 0x4B448D, country: 'CH', tail_number: 'HB-ZYZ'},
 
+    {icao: 0x0B0000, country: 'CU', tail_number: 'CU-T0000'},
+    {icao: 0x0B05AF, country: 'CU', tail_number: 'CU-T1455'},
+    {icao: 0x0B06A6, country: 'CU', tail_number: 'CU-T1702'},
+
     {icao: 0x3C4586, country: 'DE', tail_number: 'D-AALF'},
     {icao: 0x3C4A21, country: 'DE', tail_number: 'D-ABQA'},
     {icao: 0x3C4B4B, country: 'DE', tail_number: 'D-ABZK'},
@@ -286,6 +290,7 @@ const EXPECTED_TAIL_NUMBERS = [
 
     // Other countries with unpredictable ICAO24 mappings.
     {icao: 0x7800EB, country: 'CN'},
+    {icao: 0x0100DC, country: 'EG'},
     {icao: 0x345115, country: 'ES'},
     {icao: 0x8A052E, country: 'ID'},
     {icao: 0x0d0380, country: 'MX'},

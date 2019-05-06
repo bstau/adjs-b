@@ -88,8 +88,8 @@ TailNumber.FromAUICAO = function(icao) {
  * @return {String||null}
  */
 TailNumber.FromBEICAO = function(icao) {
-	const MIN_BE_ICAO = 0x448000;
-	const MAX_BE_ICAO = 0x44FFFF;
+  const MIN_BE_ICAO = 0x448000;
+  const MAX_BE_ICAO = 0x44FFFF;
 
   // Range check, please.
   if (icao < MIN_BE_ICAO) return null;
@@ -134,8 +134,8 @@ TailNumber.FromCAICAO = function(icao) {
  * @return {String||null}
  */
 TailNumber.FromCHICAO = function(icao) {
-	const MIN_CH_ICAO = 0x4B0000;
-	const MAX_CH_ICAO = 0x4B7FFF;
+  const MIN_CH_ICAO = 0x4B0000;
+  const MAX_CH_ICAO = 0x4B7FFF;
 
   const MAX_CH_ICAO_ALPHA = MIN_CH_ICAO + (26*26*26);
 
@@ -153,6 +153,24 @@ TailNumber.FromCHICAO = function(icao) {
     return 'HB-' + CHARSET[Math.floor(offset / (26 * 26))] +
         CHARSET[Math.floor((offset / 26) % 26)] +
         CHARSET[offset % 26];
+  }
+
+  return null;
+}
+
+TailNumber.FromCUICAO = function(icao) {
+  const MIN_CU_ICAO = 0x0B0000;
+  const MAX_CU_ICAO = 0x0B0FFF;
+  const MAX_CU_ICAO_NUM = MIN_CU_ICAO + 10000;
+
+  // Range check, please.
+  if (icao < MIN_CU_ICAO) return null;
+  if (icao > MAX_CU_ICAO) return null;
+
+  if (icao < MAX_CU_ICAO_NUM) {
+    var offset = icao - MIN_CU_ICAO;
+    var suffix = offset.toString(10);
+    return 'CU-T' + '0000'.substr(suffix.length) + suffix;
   }
 
   return null;
@@ -245,8 +263,8 @@ TailNumber.FromDEICAO = function(icao) {
 }
 
 TailNumber.FromDKICAO = function(icao) {
-	const MIN_DK_ICAO = 0x458000;
-	const MAX_DK_ICAO = 0x45FFFF;
+  const MIN_DK_ICAO = 0x458000;
+  const MAX_DK_ICAO = 0x45FFFF;
 
   // Range check, please.
   if (icao < MIN_DK_ICAO) return null;
@@ -261,8 +279,8 @@ TailNumber.FromDKICAO = function(icao) {
  * @return {String||null}
  */
 TailNumber.FromFIICAO = function(icao) {
-	const MIN_FI_ICAO = 0x460000;
-	const MAX_FI_ICAO = 0x467FFF;
+  const MIN_FI_ICAO = 0x460000;
+  const MAX_FI_ICAO = 0x467FFF;
 
   const MAX_FI_ICAO_ALPHA = (26*26*26) + MIN_FI_ICAO;
 
@@ -328,8 +346,8 @@ TailNumber.FromFRICAO = function(icao) {
  * @return {String||null}
  */
 TailNumber.FromGRICAO = function(icao) {
-	const MIN_GR_ICAO = 0x468000;
-	const MAX_GR_ICAO = 0x46FFFF;
+  const MIN_GR_ICAO = 0x468000;
+  const MAX_GR_ICAO = 0x46FFFF;
 
   // Range check, please.
   if (icao < MIN_GR_ICAO) return null;
@@ -347,8 +365,8 @@ TailNumber.FromGRICAO = function(icao) {
  * @return {String||null}
  */
 TailNumber.FromHUICAO = function(icao) {
-	const MIN_HU_ICAO = 0x470000;
-	const MAX_HU_ICAO = 0x477FFF;
+  const MIN_HU_ICAO = 0x470000;
+  const MAX_HU_ICAO = 0x477FFF;
 
   // Range check, please.
   if (icao < MIN_HU_ICAO) return null;
@@ -361,8 +379,8 @@ TailNumber.FromHUICAO = function(icao) {
 }
 
 TailNumber.FromJPICAO = function(icao) {
-	const MIN_JP_ICAO = 0x840000;
-	const MAX_JP_ICAO = 0x87FFFF;
+  const MIN_JP_ICAO = 0x840000;
+  const MAX_JP_ICAO = 0x87FFFF;
 
   // Two character sets are used; numbers cannot follow letters in a tail number
   const ALNUM = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -380,7 +398,7 @@ TailNumber.FromJPICAO = function(icao) {
   //             [A-Z]             576 tails
   //                  [A-Z]         24 tails
 
-	const ASSIGNED = 229840;
+  const ASSIGNED = 229840;
 
   // Range check, please.
   if (icao < MIN_JP_ICAO) return null;
@@ -390,32 +408,32 @@ TailNumber.FromJPICAO = function(icao) {
   // Japanese tail numbers are arranged as JA0000, JA000X, JA00XX.
   // The ICAO24 packing allows for JA0XXX too, but this has not been observed.
 
-	// Get the first character, which must be a number.
+  // Get the first character, which must be a number.
   var offset = icao - MIN_JP_ICAO;
   const digit0 = Math.floor(offset / 22984);
-	offset %= 22984;
+  offset %= 22984;
 
-	// Get the second character, which may be alphanumeric.
-	const digit1num = offset < 9160;
+  // Get the second character, which may be alphanumeric.
+  const digit1num = offset < 9160;
   const digit1 = ALNUM[digit1num ? Math.floor(offset / 916) : Math.floor(10 + (offset - 9160) / 576)];
-	offset -= digit1num ? 0 : 9160;
-	offset %= digit1num ? 916 : 576;
+  offset -= digit1num ? 0 : 9160;
+  offset %= digit1num ? 916 : 576;
 
-	// Get the third character.
-	const digit2num = digit1num ? (offset < 340) : false;
-	const digit2 = (digit1num ? ALNUM : AL)[Math.floor(digit2num ? (offset / 34) : (10 + ((offset - 340)/ 24)))];
-	offset -= digit2num ? 0 : 340;
-	offset %= digit2num ? 34 : 24;
+  // Get the third character.
+  const digit2num = digit1num ? (offset < 340) : false;
+  const digit2 = (digit1num ? ALNUM : AL)[Math.floor(digit2num ? (offset / 34) : (10 + ((offset - 340)/ 24)))];
+  offset -= digit2num ? 0 : 340;
+  offset %= digit2num ? 34 : 24;
 
-	// Get the final character, based on the previous character type.
-	const digit3 = (digit2num ? ALNUM : AL)[offset];
+  // Get the final character, based on the previous character type.
+  const digit3 = (digit2num ? ALNUM : AL)[offset];
 
   return 'JA'.concat(digit0).concat(digit1).concat(digit2).concat(digit3);
 }
 
 TailNumber.FromKPICAO = function(icao) {
-	const MIN_KP_ICAO = 0x720000;
-	const MAX_KP_ICAO = 0x727FFF;
+  const MIN_KP_ICAO = 0x720000;
+  const MAX_KP_ICAO = 0x727FFF;
 
   // Range check, please.
   if (icao < MIN_KP_ICAO) return null;
@@ -431,8 +449,8 @@ TailNumber.FromKPICAO = function(icao) {
 }
 
 TailNumber.FromKRICAO = function(icao) {
-	const MIN_KR_ICAO = 0x718000;
-	const MAX_KR_ICAO = 0x71FFFF;
+  const MIN_KR_ICAO = 0x718000;
+  const MAX_KR_ICAO = 0x71FFFF;
 
   // Range check, please.
   if (icao < MIN_KR_ICAO) return null;
@@ -461,8 +479,8 @@ TailNumber.FromKRICAO = function(icao) {
  * @return {String||null}
  */
 TailNumber.FromPTICAO = function(icao) {
-	const MIN_PT_ICAO = 0x490000;
-	const MAX_PT_ICAO = 0x497FFF;
+  const MIN_PT_ICAO = 0x490000;
+  const MAX_PT_ICAO = 0x497FFF;
 
   // Range check, please.
   if (icao < MIN_PT_ICAO) return null;
@@ -480,8 +498,8 @@ TailNumber.FromPTICAO = function(icao) {
  * @return {String||null}
  */
 TailNumber.FromROICAO = function(icao) {
-	const MIN_RO_ICAO = 0x4A0000;
-	const MAX_RO_ICAO = 0x4A7FFF;
+  const MIN_RO_ICAO = 0x4A0000;
+  const MAX_RO_ICAO = 0x4A7FFF;
 
   // Range check, please.
   if (icao < MIN_RO_ICAO) return null;
@@ -499,8 +517,8 @@ TailNumber.FromROICAO = function(icao) {
  * @return {String||null}
  */
 TailNumber.FromRUICAO = function(icao) {
-	const MIN_RU_ICAO = 0x140000;
-	const MAX_RU_ICAO = 0x157FFF;
+  const MIN_RU_ICAO = 0x140000;
+  const MAX_RU_ICAO = 0x157FFF;
 
   // totally a guess; only observed up to RA-96022
   const MAX_RU_ICAO_NUM = MIN_RU_ICAO + 100000;
@@ -520,8 +538,8 @@ TailNumber.FromRUICAO = function(icao) {
 }
 
 TailNumber.FromSEICAO = function(icao) {
-	const MIN_SE_ICAO = 0x4A8000;
-	const MAX_SE_ICAO = 0x4AFFFF;
+  const MIN_SE_ICAO = 0x4A8000;
+  const MAX_SE_ICAO = 0x4AFFFF;
 
   // Range check, please.
   if (icao < MIN_SE_ICAO) return null;
@@ -534,8 +552,8 @@ TailNumber.FromSEICAO = function(icao) {
 }
 
 TailNumber.FromSGICAO = function(icao) {
-	const MIN_SG_ICAO = 0x768000;
-	const MAX_SG_ICAO = 0x76FFFF;
+  const MIN_SG_ICAO = 0x768000;
+  const MAX_SG_ICAO = 0x76FFFF;
 
   // Range check, please.
   if (icao < MIN_SG_ICAO) return null;
@@ -545,8 +563,8 @@ TailNumber.FromSGICAO = function(icao) {
 }
 
 TailNumber.FromTHICAO = function(icao) {
-	const MIN_TH_ICAO = 0x880000;
-	const MAX_TH_ICAO = 0x887FFF;
+  const MIN_TH_ICAO = 0x880000;
+  const MAX_TH_ICAO = 0x887FFF;
 
   // Range check, please.
   if (icao < MIN_TH_ICAO) return null;
@@ -556,8 +574,8 @@ TailNumber.FromTHICAO = function(icao) {
 }
 
 TailNumber.FromTRICAO = function(icao) {
-	const MIN_TR_ICAO = 0x4B8000;
-	const MAX_TR_ICAO = 0x4BFFFF;
+  const MIN_TR_ICAO = 0x4B8000;
+  const MAX_TR_ICAO = 0x4BFFFF;
 
   // Range check, please.
   if (icao < MIN_TR_ICAO) return null;
@@ -652,8 +670,8 @@ TailNumber.FromUSICAO = function(icao) {
 }
 
 TailNumber.FromZAICAO = function(icao) {
-	const MIN_ZA_ICAO = 0x008000;
-	const MAX_ZA_ICAO = 0x00FFFF;
+  const MIN_ZA_ICAO = 0x008000;
+  const MAX_ZA_ICAO = 0x00FFFF;
 
   // Range check, please.
   if (icao < MIN_ZA_ICAO) return null;
@@ -727,7 +745,7 @@ Address.PREFIXES = ([
   {prefix: '00001010101100', location_name: 'Belize', country_code: 'BZ'},
   {prefix: '000010101100', location_name: 'Colombia', country_code: 'CO'},
   {prefix: '000010101110', location_name: 'Costa Rica', country_code: 'CR'},
-  {prefix: '000010110000', location_name: 'Cuba', country_code: 'CU'},
+  {prefix: '000010110000', location_name: 'Cuba', country_code: 'CU', tail_algorithm: TailNumber.FromCUICAO},
   {prefix: '000010110010', location_name: 'El Salvador', country_code: 'SV'},
   {prefix: '000010110100', location_name: 'Guatemala', country_code: 'GT'},
   {prefix: '000010110110', location_name: 'Guyana', country_code: 'GY'},
