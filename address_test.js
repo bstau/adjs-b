@@ -304,6 +304,7 @@ const EXPECTED_TAIL_NUMBERS = [
     {icao: 0x404001, country: 'GB'},
 
     // Other countries with unpredictable ICAO24 mappings.
+    {icao: 0xE48073, country: 'BR'},
     {icao: 0x7800EB, country: 'CN'},
     {icao: 0x0100DC, country: 'EG'},
     {icao: 0x345115, country: 'ES'},
