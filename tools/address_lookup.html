@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mode S Address Lookup</title>
+    <script src="../address.js"></script>
+    <script src="address_lookup.js"></script>
+    <style type="text/css">
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+        font-kerning: normal;
+        font-feature-settings: normal;
+      }
+      body { max-width: 40em; }
+
+      #error { font-style: italic; color: #900;}
+      .searchbox {
+        border-radius: 5px;
+        background: #4E9CB5;
+        color: white;
+        padding: 0.5em 1.0em;
+        font-size: 13pt;
+      }
+
+      #id { font-feature-settings: "tnum", "zero"; }
+
+      .searchbox input {
+        background: #d4e5eb;
+        color: black;
+        font-weight: bold;
+        border: 3px solid #d4e5eb;
+        border-radius: 4px;
+        margin-left: 1em;
+        width: 10em;
+        font-size: 13pt;
+      }
+      p { margin: 0 0; }
+      #results { margin-top: 2em; }
+      #results th, #results td { vertical-align: top; text-align: left; }
+    </style>
+  </head>
+  <body>
+    <form id="lookup">
+      <div class="searchbox">
+        <p>Hex ICAO24 Address: <input type="text" value="" maxlength="6" id="address"></p>
+      </div>
+      <p id="error"></p>
+      <table id="results" style="display: none">
+        <tr>
+          <th>ID:</td>
+          <td id="id"></td>
+        </tr>
+        <tr>
+          <th>Country:</td>
+          <td id="country"></td>
+        </tr>
+        <tr>
+          <th>Tail Number:</td>
+          <td id="tail_number"></td>
+        </tr>
+      </table>
+    </form>
+  </body>
+</html>
