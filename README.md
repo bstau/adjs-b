@@ -7,6 +7,7 @@ aircraft identification and ADS-B (CPR location encoding, tail number to ICAO
 The library is broken down into the following components:
 
 - [ICAO 24-bit address to tail number conversion](address.js)
+- [ICAO 24-bit address to country lookup](address.js)
 - [Altitude Code encoding/decoding](altitude_code.js)
 - [Tail number to ICAO 24-bit address conversion](callsign.js)
 - [Compact Position Reporting (CPR) decoding](cpr.js)
