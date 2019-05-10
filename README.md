@@ -9,7 +9,7 @@ The library is broken down into the following components:
 - [ICAO 24-bit address to tail number conversion](address.js)
 - [ICAO 24-bit address to country lookup](address.js)
 - [Altitude Code encoding/decoding](altitude_code.js)
-- [Compact Position Reporting (CPR) decoding](cpr.js)
+- [Compact Position Reporting (CPR) encoding](cpr.js)
 - [ADS-B and AIS 6-bit characters to ASCII conversion](ext_squitter_callsign.js)
 - [CRC generation for Mode S frames](mode_s_crc.js)
 - [Decoding of packed Mode S frames](mode_s_message.js)
