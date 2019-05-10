@@ -6,7 +6,7 @@ const SIXBIT_TEST_CASES = [
 
 testThat('Decodes valid 6-bit callsigns', SIXBIT_TEST_CASES.every(
     function(input) {
-        var actual = decodeCallsign(fromHexBuf(input.data));
+        var actual = Callsign.Decode(fromHexBuf(input.data));
         return assertEqual(
-            'decodeCallsign("' + input.data + '")', input.callsign, actual);
+            'Callsign.Decode("' + input.data + '")', input.callsign, actual);
     }));

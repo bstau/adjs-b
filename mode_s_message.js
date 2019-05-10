@@ -187,7 +187,7 @@ ModeSMessage.prototype.decodeExtSquitter = function() {
     case TC_AIRCRAFT_IDENTIFICATION_2:
     case TC_AIRCRAFT_IDENTIFICATION_3:
     case TC_AIRCRAFT_IDENTIFICATION_4:
-      this.callsign = decodeCallsign(this.data.slice(5,11));
+      this.callsign = Callsign.Decode(this.data.slice(5,11));
       break;
 
     case TC_AIRBORNE_VELOCITY:

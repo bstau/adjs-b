@@ -1,8 +1,13 @@
+/** Routines to decode a callsign/flight number.
+ * @namespace
+ */
+var Callsign = {};
+
 /** Decode a callsign from a 6-bit-per-character encoding.
  *
  * @param {Uint8Array} Extended squitter payload
  */
-function decodeCallsign(payload) {
+Callsign.Decode = function(payload) {
     if (payload.length !== 6) {
         throw "Encoded callsign value must be 6 bytes.";
     }
