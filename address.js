@@ -37,6 +37,7 @@ TailNumber.FromOffset64 = function(offset, prefix) {
 /** Convert an ICAO address offset to a tail number.
  *
  * For countries that use 5-bit packing.
+ * Min valid offset is 0x0421, max is 0x6B5A.
  *
  * @param {Number} icao 24-bit address.
  * @param {String} Tail number prefix to prepend to the returned value.
@@ -991,6 +992,49 @@ Address.PREFIXES = ([
     // Sort prefixes by descending prefix length, such that the first match for the
     // prefix and mask will be the most specific for any given ICAO address.
     return a.prefix.length < b.prefix.length;
+});
+
+Address.GROUND_VEHICLES = ([
+  // Source: NZ Advisory Circular AC 91-2
+  {start: 0xC87E00, end: 0xC87EFF},
+]).sort(function(a, b) {
+  return a.start > b.start;
+});
+
+Address.MILITARY_VEHICLES = ([
+  // Source: NZ Advisory Circular AC 91-2
+  {start: 0xC87F00, end: 0xC87FFF},  // NZ
+
+  // Source: live-military-mode-s.eu and some squinting at ranges
+  {start: 0x447D00, end: 0x447DFF},  // AT
+  {start: 0x44F000, end: 0x44F8FF},  // BE
+  {start: 0x457C00, end: 0x457C0F},  // BU
+  {start: 0x45F400, end: 0x45F4FF},  // DK
+  {start: 0x467801, end: 0x4678FF},  // FI
+  {start: 0x468001, end: 0x4683FF},  // GR
+  {start: 0x46F480, end: 0x46F5FF},  // GR
+  {start: 0x477FF1, end: 0x477FFF},  // HU
+  {start: 0x4780C0, end: 0x47812F},  // NO
+  {start: 0x480400, end: 0x4804FF},  // NL
+  {start: 0x480800, end: 0x48087F},  // NL
+  {start: 0x480C00, end: 0x480C3F},  // NL
+  {start: 0x481000, end: 0x48107F},  // NL
+  {start: 0x48D800, end: 0x48D8FF},  // PL
+  {start: 0x497C00, end: 0x497CFF},  // PT
+  {start: 0x498420, end: 0x498490},  // CZ
+  {start: 0x4B7F50, end: 0x4B7FFF},  // CH
+  {start: 0x4B8201, end: 0x4B82CF},  // TR
+  {start: 0x7008F0, end: 0x700AFF},  // AF
+  {start: 0x71DD00, end: 0x71DD20},  // KR
+  {start: 0x71DF00, end: 0x71DF10},  // KR
+  {start: 0x71F900, end: 0x71FCFF},  // KR
+  {start: 0x738A00, end: 0x738AA0},  // IL
+  {start: 0x738B40, end: 0x738B4F},  // IL
+  {start: 0x7CF800, end: 0x7CF9FF},  // AU
+  {start: 0xADFC00, end: 0xADFFFF},  // US
+  {start: 0xAE0000, end: 0xAFFFFF},  // US
+]).sort(function(a, b) {
+  return a.start > b.start;
 });
 
 /** Look up details about an address.
