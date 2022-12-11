@@ -117,7 +117,7 @@ class TailNumber {
       // Australian tail numbers are encoded as a fairly basic base-36 format,
       // consisting only of the three-letter suffix to the country prefix (VH).
 
-      var AU_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ          ';
+      var AU_TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
       var AU_TABLE_LEN = AU_TABLE.length;
       var AU_MIN_ICAO = 0x7C0000;
       var AU_MAX_ICAO = AU_MIN_ICAO + Math.pow(AU_TABLE_LEN, 3) - 1;
