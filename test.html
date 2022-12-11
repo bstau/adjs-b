@@ -17,5 +17,13 @@
         <script src="address_test.js"></script>
     </head>
     <body>
+        <input type="text" id="hex" placeholder="0x7C4920" />
+        <button id="to_tail">Convert</button>
+        <script>
+            document.getElementById("to_tail").addEventListener("click", function() {
+                alert(Address.ToTailNumber(document.getElementById("hex").value));
+            });
+        </script>
+
     </body>
 </html>
